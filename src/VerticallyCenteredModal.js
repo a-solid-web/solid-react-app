@@ -16,7 +16,7 @@ export default class VerticallyCenteredModal extends React.Component {
     render (){
         let friendsMarkup = this.props.friends ? this.props.friends.map((friend, index) => {
             return (
-                <FriendCard key={index} friend={friend}></FriendCard>
+                <FriendCard key={index} friend={friend} onClick={this.props.deleteFriend}></FriendCard>
             )
         }) : "";
 
@@ -36,8 +36,6 @@ export default class VerticallyCenteredModal extends React.Component {
             )
         }) : "";
 
-        console.log(this.props.messages)
-
         return (
             <Modal
                 {... this.props}
@@ -47,7 +45,7 @@ export default class VerticallyCenteredModal extends React.Component {
             >
                 <ModalHeader>
                     <ModalTitle id="contained-modal-title-vcenter">
-                        Your Friends
+                        {friendsMarkup ? "Your Friends":"Your Messages"}
                     </ModalTitle>
                 </ModalHeader>
                 <ModalBody>

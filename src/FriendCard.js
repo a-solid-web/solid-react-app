@@ -10,9 +10,9 @@ export const FriendCard = (props) => {
                     Friend
                 </Card.Title>
                 <Card.Text>
-                    {props.friend}
+                    {props.friend.name}
                 </Card.Text>
-                <Button style={{ backgroundColor: "red"}}>Remove Friend</Button>
+                <Button style={{ backgroundColor: "red"}} onClick={props.onClick} id={props.friend.webId}>Remove Friend</Button>
             </Card.Body>
         </Card>
     )
