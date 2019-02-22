@@ -9,6 +9,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import VerticallyCenteredModal from './VerticallyCenteredModal';
 import AddFriend from "./AddFriend";
+//import User from "./User";
+import {ProfilePicture} from "./ProfilePicture";
 
 const $rdf = require("rdflib");
 
@@ -103,16 +105,6 @@ class App extends React.Component {
       if (ok) window.location.reload();
       else alert(message);
     });
-
-    /*const query = "DELETE DATA { <" + url  + "#me> <http://www.w3.org/2006/vcard/ns#knows>  <https://ludwigschubert.solid.community/profile/card#" + emailId + ">.}"
-    console.log(query)
-    const options = {
-      noMeta: true,
-      contentType: "application/sparql-update",
-      body: query
-    }
-
-    store.fetcher.webOperation("PATCH", url, options)*/
   }
 
   componentWillMount(){
@@ -135,7 +127,9 @@ class App extends React.Component {
             <Col sm>
             </Col>
             <Col md>
+            {/*<User/>}*/}
               <LoggedIn>
+                <ProfilePicture webId="https://ludwigschubert.solid.community/profile/card#me"/>
                 <Image src="user.image" defaultSrc="profile.svg" className="profile"/>
                 <p>Welcome back, <Value src="user.name"/>.</p>
                 <Button onClick={this.toggleFriendsModal.bind(this)}>Show Friends</Button>
