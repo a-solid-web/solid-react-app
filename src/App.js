@@ -88,7 +88,6 @@ class App extends React.Component {
         this.setState({friends: friends}); 
         return
       });
-      console.log(this.state.friends)
     });
   }
 

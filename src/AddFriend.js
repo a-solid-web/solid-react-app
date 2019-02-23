@@ -38,8 +38,8 @@ class AddFriend extends React.Component {
         return (
             <Form onSubmit={this.addFriend.bind(this)}>
                 <Form.Group>
-                    <Form.Label>Enter webID:</Form.Label>
-                    <Form.Control type="text" placeholder="Enter your friends webID" onChange={this.changeFriendToAdd.bind(this)}/>
+                    <Form.Label>Add a Friend:</Form.Label>
+                    <Form.Control type="text" placeholder="Enter your friends webId" onChange={this.changeFriendToAdd.bind(this)}/>
                     <Button type="submit">Submit</Button>
                 </Form.Group>
             </Form>

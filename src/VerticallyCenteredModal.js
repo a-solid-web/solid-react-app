@@ -6,7 +6,7 @@ import ModalTitle from "react-bootstrap/ModalTitle";
 import ModalBody from "react-bootstrap/ModalBody";
 import ModalFooter from "react-bootstrap/ModalFooter";
 import CardColumns from "react-bootstrap/CardColumns";
-import ListGroup from "react-bootstrap/ListGroup";
+import Nav from "react-bootstrap/Nav";
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -22,20 +22,21 @@ export default class VerticallyCenteredModal extends React.Component {
 
         let messagesMarkup = this.props.messages ? this.props.messages.map((message, index) => {
             return (
-                <ListGroup.Item action href={"#" + index} key={index}>
-                    {message[0]}
-                </ListGroup.Item>
+                <Nav.Item key={"#" + index}>
+                    <Nav.Link eventKey={"#" + index}>{message[0]}</Nav.Link>
+                </Nav.Item>
             )
         }) : "";
 
-        let messageTexts = this.props.message ? this.props.messages.map((message, index) => {
+        let messageTexts = this.props.messages ? this.props.messages.map((message, index) => {
             return (
-                <Tab.Pane eventKey={index}>
+                <Tab.Pane eventKey={"#" + index}>
                     {message[1]}
                 </Tab.Pane>
             )
         }) : "";
 
+        console.log(messageTexts)
         return (
             <Modal
                 {... this.props}
@@ -54,15 +55,15 @@ export default class VerticallyCenteredModal extends React.Component {
                     </CardColumns>
                     <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
                         <Row>
-                            <Col sm={4}>
-                            <ListGroup>
-                                {messagesMarkup}
-                            </ListGroup>
+                            <Col sm={2}>
+                                <Nav variant="pills" className="flex-column">
+                                    {messagesMarkup}
+                                </Nav>
                             </Col>
-                            <Col sm={8}>
-                            <Tab.Content>
-                                {messageTexts}
-                            </Tab.Content>
+                            <Col sm={10}>
+                                <Tab.Content>
+                                    {messageTexts}
+                                </Tab.Content>
                             </Col>
                         </Row>
                     </Tab.Container>
