@@ -30,12 +30,13 @@ class App extends React.Component {
       inboxModal: false,
       friends: [],
       messages: [],
-      webId: "https://malte18.solid.community/profile/card#me"
+      webId: "https://malte18.solid.community/profile/card#me", 
+      picture: ""
     }
     this.fetchMessages = this.fetchMessages.bind(this); 
     this.fetchFriends = this.fetchFriends.bind(this); 
     this.deleteFriend = this.deleteFriend.bind(this); 
-
+    this.fetchPicture = this.fetchPicture.bind(this); 
   }
 
   toggleFriendsModal (){
@@ -110,14 +111,22 @@ class App extends React.Component {
     });
   }
 
-  getPhoto() {
-
+  fetchPicture() {
+    const store = $rdf.graph();
+    const fetcher = new $rdf.Fetcher(store);
+    var picture = ""; 
+    fetcher.load(this.state.webId).then((response) => {
+      picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto")); 
+      console.log(picture.value);
+      this.setState({picture: picture.value});
+    });
   }
 
   componentWillMount(){
 
     this.fetchMessages();
     this.fetchFriends();
+    this.fetchPicture(); 
   }
 
   render () { 
@@ -135,9 +144,9 @@ class App extends React.Component {
             <Col md>
             {/*<User/>}*/}
               <LoggedIn>
-                <ProfilePicture webId={this.state.webId}/>
+                <ProfilePicture picture={this.state.picture}/>
                 <Image src="user.image" defaultSrc="profile.svg" className="profile"/>
-                <p>Welcome back, <Value src="user.name"/>.</p>
+                <p>Welcome back, {this.state.webId} <Value src={this.state.webId}/>.</p>
                 <Button onClick={this.toggleFriendsModal.bind(this)}>Show Friends</Button>
                 <Button onClick={this.toggleInboxModal.bind(this)}>Show Messages</Button>
                 <VerticallyCenteredModal messages={this.state.messages} show={this.state.inboxModal} onHide={this.toggleInboxModal.bind(this)}></VerticallyCenteredModal>
