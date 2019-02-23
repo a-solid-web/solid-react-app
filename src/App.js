@@ -29,8 +29,13 @@ class App extends React.Component {
       friendsModal: false,
       inboxModal: false,
       friends: [],
-      messages: []
+      messages: [],
+      webId: "https://malte18.solid.community/profile/card#me"
     }
+    this.fetchMessages = this.fetchMessages.bind(this); 
+    this.fetchFriends = this.fetchFriends.bind(this); 
+    this.deleteFriend = this.deleteFriend.bind(this); 
+
   }
 
   toggleFriendsModal (){
@@ -41,8 +46,8 @@ class App extends React.Component {
     this.setState({ inboxModal: !this.state.inboxModal });
   }
 
-  fetchMessages(webId){
-    const inboxAdress = webId.replace("profile/card#me", "inbox/");
+  fetchMessages(){
+    const inboxAdress = this.state.webId.replace("profile/card#me", "inbox/");
 
     const store = $rdf.graph();
     const fetcher = new $rdf.Fetcher(store);
@@ -69,14 +74,14 @@ class App extends React.Component {
     });
   }
 
-  fetchFriends(webId){
+  fetchFriends(){
     const store = $rdf.graph();
     const fetcher = new $rdf.Fetcher(store);
 
     //loading friends into state
     var friends = [];
-    fetcher.load(webId).then((response) => {
-      friends = store.each($rdf.sym(webId), FOAF("knows"));
+    fetcher.load(this.state.webId).then((response) => {
+      friends = store.each($rdf.sym(this.state.webId), FOAF("knows"));
       //console.log(friends)
       friends = friends.map(async (friend) => {
         var friendName = "";
@@ -96,9 +101,8 @@ class App extends React.Component {
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
 
-    const webId = "https://ludwigschubert.solid.community/profile/card#me";
     let ins = [];
-    let del = $rdf.st($rdf.sym(webId), FOAF("knows"), $rdf.sym(friendToDelete), $rdf.sym(webId).doc());
+    let del = $rdf.st($rdf.sym(this.state.webId), FOAF("knows"), $rdf.sym(friendToDelete), $rdf.sym(this.state.webId).doc());
     
     updater.update(del, ins, (uri, ok, message) => {
       if (ok) window.location.reload();
@@ -106,11 +110,14 @@ class App extends React.Component {
     });
   }
 
-  componentWillMount(){
-    const webId = "https://ludwigschubert.solid.community/profile/card#me";
+  getPhoto() {
 
-    this.fetchMessages(webId);
-    this.fetchFriends(webId);
+  }
+
+  componentWillMount(){
+
+    this.fetchMessages();
+    this.fetchFriends();
   }
 
   render () { 
@@ -128,7 +135,7 @@ class App extends React.Component {
             <Col md>
             {/*<User/>}*/}
               <LoggedIn>
-                <ProfilePicture webId="https://ludwigschubert.solid.community/profile/card#me"/>
+                <ProfilePicture webId={this.state.webId}/>
                 <Image src="user.image" defaultSrc="profile.svg" className="profile"/>
                 <p>Welcome back, <Value src="user.name"/>.</p>
                 <Button onClick={this.toggleFriendsModal.bind(this)}>Show Friends</Button>
