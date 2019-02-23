@@ -9,10 +9,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import VerticallyCenteredModal from './VerticallyCenteredModal';
 import AddFriend from "./AddFriend";
-//import User from "./User";
 import {ProfilePicture} from "./ProfilePicture";
 
 const $rdf = require("rdflib");
+const auth = require('solid-auth-client')
 
 const { default: data } = require('@solid/query-ldflex');
 const FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
@@ -30,12 +30,12 @@ class App extends React.Component {
       inboxModal: false,
       friends: [],
       messages: [],
-      webId: "https://malte18.solid.community/profile/card#me"
+      webId: ""
     }
+
     this.fetchMessages = this.fetchMessages.bind(this); 
     this.fetchFriends = this.fetchFriends.bind(this); 
     this.deleteFriend = this.deleteFriend.bind(this); 
-
   }
 
   toggleFriendsModal (){
@@ -110,14 +110,21 @@ class App extends React.Component {
     });
   }
 
-  getPhoto() {
-
+  fetchUser() {
+    auth.trackSession(session => {
+      if (!session) {
+        console.log("You are not logged in")
+      } else {
+        this.setState({webId: session.webId})
+        console.log(this.state.webId)
+        this.fetchMessages();
+        this.fetchFriends();
+      }
+    })
   }
 
   componentWillMount(){
-
-    this.fetchMessages();
-    this.fetchFriends();
+    this.fetchUser();
   }
 
   render () { 
@@ -133,7 +140,6 @@ class App extends React.Component {
             <Col sm>
             </Col>
             <Col md>
-            {/*<User/>}*/}
               <LoggedIn>
                 <ProfilePicture webId={this.state.webId}/>
                 <Image src="user.image" defaultSrc="profile.svg" className="profile"/>
