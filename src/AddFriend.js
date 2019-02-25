@@ -29,18 +29,18 @@ class AddFriend extends React.Component {
         let del = [];
         let ins = $rdf.st($rdf.sym(webId), FOAF("knows"), $rdf.sym(friendToAdd), $rdf.sym(webId).doc());
         updater.update(del, ins, (ok, uri, message) => {
-            if (ok) console.log("Added Friend.");
+            if (ok) console.log("Changes have been applied, reload page to see them");
             else alert(message);
         });
     }
 
     render() {
         return (
-            <Form onSubmit={this.addFriend.bind(this)}>
+            <Form onSubmit={this.addFriend.bind(this)} style={{marginTop: 5}}>
                 <Form.Group>
                     <Form.Label>Add a Friend:</Form.Label>
                     <Form.Control type="text" placeholder="Enter your friends webId" onChange={this.changeFriendToAdd.bind(this)}/>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" style={{marginTop: 5}}>Add</Button>
                 </Form.Group>
             </Form>
         )

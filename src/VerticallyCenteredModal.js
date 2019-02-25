@@ -5,12 +5,11 @@ import ModalHeader from "react-bootstrap/ModalHeader";
 import ModalTitle from "react-bootstrap/ModalTitle";
 import ModalBody from "react-bootstrap/ModalBody";
 import ModalFooter from "react-bootstrap/ModalFooter";
-import CardColumns from "react-bootstrap/CardColumns";
-import Nav from "react-bootstrap/Nav";
-import Tab from "react-bootstrap/Tab";
+import CardGroup from "react-bootstrap/CardGroup";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { FriendCard } from "./FriendCard";
+import AddFriend from "./AddFriend";
 
 export default class VerticallyCenteredModal extends React.Component {
     render (){
@@ -20,19 +19,16 @@ export default class VerticallyCenteredModal extends React.Component {
             )
         }) : "";
 
-        let messagesMarkup = this.props.messages ? this.props.messages.map((message, index) => {
-            return (
-                <Nav.Item key={"#" + index}>
-                    <Nav.Link eventKey={"#" + index}>{message[0]}</Nav.Link>
-                </Nav.Item>
-            )
-        }) : "";
-
         let messageTexts = this.props.messages ? this.props.messages.map((message, index) => {
             return (
-                <Tab.Pane eventKey={"#" + index} key={"#" + index}>
-                    {message[1]}
-                </Tab.Pane>
+                <Row key={"#" + index} style={{margin: 10, padding: 10, background: "#eee", border: "solid #59f 5px", borderRadius: 5}}>
+                    <Col md="10">
+                        {message.actor + " " + message.action + " "} <a href={message.document}>{message.document}</a> {" (" + message.topics + ") with you."} 
+                    </Col>
+                    <Col md="2">
+                        <p style={{color: "grey"}}>{message.time[1] + ", " + message.time[0]}</p>
+                    </Col>
+                </Row>
             )
         }) : "";
         
@@ -45,27 +41,17 @@ export default class VerticallyCenteredModal extends React.Component {
             >
                 <ModalHeader>
                     <ModalTitle id="contained-modal-title-vcenter">
-                        {friendsMarkup ? "Your Friends":"Your Messages"}
+                        {friendsMarkup ? "My Friends":"My Messages"}
                     </ModalTitle>
                 </ModalHeader>
                 <ModalBody>
-                    <CardColumns>
+                    <CardGroup>
                         {friendsMarkup}
-                    </CardColumns>
-                    <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
-                        <Row>
-                            <Col sm={2}>
-                                <Nav variant="pills" className="flex-column">
-                                    {messagesMarkup}
-                                </Nav>
-                            </Col>
-                            <Col sm={10}>
-                                <Tab.Content>
-                                    {messageTexts}
-                                </Tab.Content>
-                            </Col>
-                        </Row>
-                    </Tab.Container>
+                    </CardGroup>
+                    {friendsMarkup ? <AddFriend/> : null}
+                    <Row>
+                        {messageTexts}
+                    </Row>
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.props.onHide}>Close</Button>

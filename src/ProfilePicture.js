@@ -4,7 +4,7 @@ import Image from "react-bootstrap/Image"
 
 export const ProfilePicture = (props) => {
         return (
-            <Image src={props.picture} fluid/>
+            <Image style={{border: "solid #999 5px", borderRadius: 5, marginRight: 10, marginBottom: 10}} src={props.picture} fluid/>
         )
     }
 

@@ -6,9 +6,7 @@ export const FriendCard = (props) => {
     return (
         <Card style={{ width: "14rem"}}>
             <Card.Body>
-                <Card.Title>
-                    Friend
-                </Card.Title>
+                <Card.Img variant="top" style={{borderRadius: 5}} src={props.friend.picture}/>
                 <Card.Text>
                     {props.friend.name}
                 </Card.Text>
