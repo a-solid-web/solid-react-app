@@ -9,7 +9,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import VerticallyCenteredModal from './VerticallyCenteredModal';
 import AddFriend from "./AddFriend";
-import {ProfilePicture} from "./ProfilePicture";
+import { ProfilePicture } from "./ProfilePicture";
+import { AddPicture } from "./AddPicture";
+import { AddProfilePicture } from './AddProfilePicture';
 
 const $rdf = require("rdflib");
 const auth = require('solid-auth-client')
@@ -30,12 +32,14 @@ class App extends React.Component {
       inboxModal: false,
       friends: [],
       messages: [],
-      webId: ""
+      webId: "",
+      picture: ""
     }
 
     this.fetchMessages = this.fetchMessages.bind(this); 
     this.fetchFriends = this.fetchFriends.bind(this); 
     this.deleteFriend = this.deleteFriend.bind(this); 
+    this.fetchPicture = this.fetchPicture.bind(this);
   }
 
   toggleFriendsModal (){
@@ -110,6 +114,63 @@ class App extends React.Component {
     });
   }
 
+  fetchPicture() {
+    const store = $rdf.graph();
+    const fetcher = new $rdf.Fetcher(store);
+    var picture = ""; 
+    fetcher.load(this.state.webId).then((response) => {
+      picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto")); 
+      console.log(picture.value);
+      this.setState({picture: picture.value});
+    });
+  }
+
+  setPicture(e){
+    var filePath = e.target.files[0];
+    var store = $rdf.graph();
+    var fetcher = new $rdf.Fetcher(store);
+
+    let webId = this.state.webId
+    
+    var reader = new FileReader()
+    reader.onload = function () {
+        var data = this.result
+        var filename = encodeURIComponent(filePath.name)
+        var contentType = "image"
+        let pictureURl = webId.replace("card#me", filename)
+        fetcher.webOperation('PUT', pictureURl, {data: data, contentType: contentType})
+    }
+    reader.readAsArrayBuffer(filePath)
+  }
+
+  setProfilePicture(e){
+    var filePath = e.target.files[0];
+    var store = $rdf.graph();
+    var fetcher = new $rdf.Fetcher(store);
+
+    let webId = this.state.webId
+    
+    var reader = new FileReader()
+    reader.onload = function () {
+        var data = this.result
+        var filename = encodeURIComponent(filePath.name)
+        var contentType = "image"
+        let pictureURl = webId.replace("card#me", filename)
+        fetcher.webOperation('PUT', pictureURl, {data: data, contentType: contentType}).then((response) => {
+          if (response.status === 201) {
+            const updater = new $rdf.UpdateManager(store);
+            let del = [];
+            let ins = $rdf.st($rdf.sym(webId), VCARD("hasPhoto"), $rdf.sym(pictureURl), $rdf.sym(webId).doc())
+            updater.update(del, ins, (uri, ok, message) => {
+              if (ok) console.log("Added picture to profile!");
+              else alert(message)
+            })
+          }
+        });
+    }
+    reader.readAsArrayBuffer(filePath)
+  }
+
   fetchUser() {
     auth.trackSession(session => {
       if (!session) {
@@ -119,6 +180,7 @@ class App extends React.Component {
         console.log(this.state.webId)
         this.fetchMessages();
         this.fetchFriends();
+        this.fetchPicture();
       }
     })
   }
@@ -141,9 +203,15 @@ class App extends React.Component {
             </Col>
             <Col md>
               <LoggedIn>
-                <ProfilePicture webId={this.state.webId}/>
-                <Image src="user.image" defaultSrc="profile.svg" className="profile"/>
-                <p>Welcome back, <Value src="user.name"/>.</p>
+                <Row>
+                  <Col md="8">
+                    <ProfilePicture picture={this.state.picture}/>
+                  </Col>
+                  <Col md="4">
+                    <Row><AddPicture onChange={this.setPicture.bind(this)}/></Row>
+                    <Row><AddProfilePicture onChange={this.setProfilePicture.bind(this)}/></Row>
+                  </Col>
+                </Row>
                 <Button onClick={this.toggleFriendsModal.bind(this)}>Show Friends</Button>
                 <Button onClick={this.toggleInboxModal.bind(this)}>Show Messages</Button>
                 <VerticallyCenteredModal messages={this.state.messages} show={this.state.inboxModal} onHide={this.toggleInboxModal.bind(this)}></VerticallyCenteredModal>

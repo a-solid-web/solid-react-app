@@ -30,13 +30,12 @@ export default class VerticallyCenteredModal extends React.Component {
 
         let messageTexts = this.props.messages ? this.props.messages.map((message, index) => {
             return (
-                <Tab.Pane eventKey={"#" + index}>
+                <Tab.Pane eventKey={"#" + index} key={"#" + index}>
                     {message[1]}
                 </Tab.Pane>
             )
         }) : "";
-
-        console.log(messageTexts)
+        
         return (
             <Modal
                 {... this.props}
