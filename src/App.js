@@ -121,19 +121,19 @@ class App extends React.Component {
           var time;
 
           var messageTypes = temp_store.each($rdf.sym(message), RDF("type"));
-          action = getAction(messageTypes)
+          action = (action) ? getAction(messageTypes) : "";
 
           actor = temp_store.any($rdf.sym(message), ACT("actor"));
-          actor = getActor(actor.value);
+          actor = (actor) ? getActor(actor.value) : "";
 
           document = temp_store.any(null, RDF("type"), $rdf.sym("http://rdfs.org/sioc/ns#Post"));
-          document = document.value;
+          document = (document) ? document.value : "";
 
           topics = temp_store.each($rdf.sym(document), RDF("type"));
-          topics = getTopics(topics);
+          topics = topics ? getTopics(topics) : "";
 
           time = temp_store.any($rdf.sym(message), ACT("updated"));
-          time = getTime(time.value);
+          time = (time) ? getTime(time.value) : "";
 
           let inboxEntry = {action: action, actor: actor, document: document, time: time, topics: topics};
           topics = [];
@@ -196,7 +196,7 @@ class App extends React.Component {
     var picture = ""; 
     fetcher.load(this.state.webId).then((response) => {
       picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto")); 
-      this.setState({picture: picture.value});
+      if (picture) this.setState({picture: picture.value});
     });
   }
 
@@ -228,7 +228,7 @@ class App extends React.Component {
     
     var reader = new FileReader()
     reader.onload = function () {
-        var data = this.result
+        var data = this.result;
         var filename = encodeURIComponent(filePath.name)
         var contentType = "image"
         let pictureURl = webId.replace("card#me", filename)
