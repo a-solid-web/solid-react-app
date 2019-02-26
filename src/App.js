@@ -38,12 +38,16 @@ class App extends React.Component {
     this.setProfilePicture = this.setProfilePicture.bind(this);
   }
 
-  toggleFriendsModal() {
+  /*toggleFriendsModal() {
     this.setState({ friendsModal: !this.state.friendsModal });
-  }
+  }*/
 
-  toggleInboxModal() {
-    this.setState({ inboxModal: !this.state.inboxModal });
+  toggleModal(e) {
+    var modalAction = e.target.id;
+    switch (modalAction) {
+      case "friendsButton": this.setState({friendsModal: !this.state.friendsModal}); break;
+      case "messageButton": this.setState({inboxModal: !this.state.inboxModal}); break;
+    }
   }
 
   fetchMessages() {
@@ -309,14 +313,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <header>
-          <h1>Solid App</h1>
-          <AuthButton
-            popup="popup.html"
-            login="Login here!"
-            logout="Logout here!"
-          />
-        </header>
         <main>
           <Container>
             <Row>
@@ -338,11 +334,11 @@ class App extends React.Component {
                       </Row>
                     </Col>
                   </Row>
-                  <Button onClick={this.toggleFriendsModal.bind(this)}>
+                  <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
                     Show My Friends
                   </Button>
                   <Button
-                    onClick={this.toggleInboxModal.bind(this)}
+                    onClick={this.toggleModal.bind(this)} id="messageButton"
                     style={{ marginLeft: 5 }}
                   >
                     Show My Messages
@@ -350,18 +346,25 @@ class App extends React.Component {
                   <VerticallyCenteredModal
                     messages={this.state.messages}
                     show={this.state.inboxModal}
-                    onHide={this.toggleInboxModal.bind(this)}
+                    onHide={this.toggleModal.bind(this)}
+                    id="messageButton"
                   />
                   <VerticallyCenteredModal
                     friends={this.state.friends}
                     show={this.state.friendsModal}
-                    onHide={this.toggleFriendsModal.bind(this)}
+                    onHide={this.toggleModal.bind(this)}
                     deleteFriend={this.deleteFriend.bind(this)}
+                    id="friendsButton"
                   />
                 </LoggedIn>
                 <LoggedOut>
                   <p>You are logged out.</p>
                 </LoggedOut>
+                <AuthButton
+                  popup="popup.html"
+                  login="Login here!"
+                  logout="Logout here!"
+                />
               </Col>
               <Col sm />
             </Row>
