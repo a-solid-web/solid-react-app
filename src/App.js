@@ -9,6 +9,7 @@ import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
 
+
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
 
@@ -114,23 +115,26 @@ class App extends React.Component {
           var time;
 
           var messageTypes = temp_store.each($rdf.sym(message), RDF("type"));
-          action = getAction(messageTypes);
+          
+          action = action ? getAction(messageTypes) : "";
 
           actor = temp_store.any($rdf.sym(message), ACT("actor"));
-          actor = getActor(actor.value);
+          actor = actor ? getActor(actor.value) : "";
 
           document = temp_store.any(
             null,
             RDF("type"),
             $rdf.sym("http://rdfs.org/sioc/ns#Post")
           );
-          document = document.value;
+          document = document ? document.value : "";
 
-          topics = temp_store.each($rdf.sym(document), RDF("type"));
-          topics = getTopics(topics);
+          topics = document
+            ? temp_store.each($rdf.sym(document), RDF("type"))
+            : "";
+          topics = topics ? getTopics(topics) : "";
 
           time = temp_store.any($rdf.sym(message), ACT("updated"));
-          time = getTime(time.value);
+          time = time ? getTime(time.value) : "";
 
           let inboxEntry = {
             action: action,
@@ -151,6 +155,7 @@ class App extends React.Component {
   }
 
   fetchFriends = () => {
+
     const store = $rdf.graph();
     const fetcher = new $rdf.Fetcher(store);
 
@@ -184,6 +189,7 @@ class App extends React.Component {
   }
 
   deleteFriend = (e) => {
+
     let friendToDelete = e.target.id;
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
@@ -208,7 +214,7 @@ class App extends React.Component {
     var picture = "";
     fetcher.load(this.state.webId).then(response => {
       picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto"));
-      this.setState({ picture: picture.value });
+      if (picture) this.setState({ picture: picture.value });
     });
   }
 
@@ -255,12 +261,12 @@ class App extends React.Component {
         .then(response => {
           if (response.status === 201) {
             const updater = new $rdf.UpdateManager(store);
-            let del = $rdf.st(
+            let del = (currentPicture) ? $rdf.st(
               $rdf.sym(webId),
               VCARD("hasPhoto"),
               $rdf.sym(currentPicture),
-              $rdf.sym(webId).doc()
-            );
+              $rdf.sym(webId).doc() 
+            ) : [];
             let ins = $rdf.st(
               $rdf.sym(webId),
               VCARD("hasPhoto"),
