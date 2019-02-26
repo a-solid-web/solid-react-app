@@ -129,7 +129,7 @@ class App extends React.Component {
           document = temp_store.any(null, RDF("type"), $rdf.sym("http://rdfs.org/sioc/ns#Post"));
           document = (document) ? document.value : "";
 
-          topics = temp_store.each($rdf.sym(document), RDF("type"));
+          topics = (document) ? temp_store.each($rdf.sym(document), RDF("type")) : "";
           topics = topics ? getTopics(topics) : "";
 
           time = temp_store.any($rdf.sym(message), ACT("updated"));
