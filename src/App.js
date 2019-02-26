@@ -25,6 +25,7 @@ class App extends React.Component {
     this.state = {
       friendsModal: false,
       inboxModal: false,
+      pictureModal: false,
       friends: [],
       messages: [],
       webId: "",
@@ -47,6 +48,7 @@ class App extends React.Component {
     switch (modalAction) {
       case "friendsButton": this.setState({friendsModal: !this.state.friendsModal}); break;
       case "messageButton": this.setState({inboxModal: !this.state.inboxModal}); break;
+      case "pictureButton": this.setState({pictureModal: !this.state.pictureModal}); break;
     }
   }
 
@@ -355,6 +357,12 @@ class App extends React.Component {
                     onHide={this.toggleModal.bind(this)}
                     deleteFriend={this.deleteFriend.bind(this)}
                     id="friendsButton"
+                  />
+                  <VerticallyCenteredModal
+                    show={this.state.pictureModal}
+                    onHide={this.toggleModal.bind(this)}
+                    id="pictureButton"
+                    webId={this.state.webId}
                   />
                 </LoggedIn>
                 <LoggedOut>
