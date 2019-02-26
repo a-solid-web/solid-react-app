@@ -9,7 +9,6 @@ import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
 
-
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
 
@@ -115,7 +114,7 @@ class App extends React.Component {
           var time;
 
           var messageTypes = temp_store.each($rdf.sym(message), RDF("type"));
-          
+
           action = action ? getAction(messageTypes) : "";
 
           actor = temp_store.any($rdf.sym(message), ACT("actor"));
@@ -152,10 +151,9 @@ class App extends React.Component {
         messages: inbox
       });
     });
-  }
+  };
 
   fetchFriends = () => {
-
     const store = $rdf.graph();
     const fetcher = new $rdf.Fetcher(store);
 
@@ -163,33 +161,32 @@ class App extends React.Component {
     var friends = [];
     fetcher.load(this.state.webId).then(response => {
       friends = store.each($rdf.sym(this.state.webId), FOAF("knows"));
-      //console.log(friends)
+
       friends = friends.map(async friend => {
         var friendName = "";
         var friendPicture = "";
+
         await fetcher.load(friend.value).then(response => {
           friendName = store.any($rdf.sym(friend.value), FOAF("name"));
           friendPicture = store.any($rdf.sym(friend.value), VCARD("hasPhoto"));
-          if (friendPicture !== undefined) {
-            friendPicture = friendPicture.value;
-          } else {
-            friendPicture = "";
-          }
+
+          friendPicture = friendPicture ? friendPicture.value : "";
         });
+
         friends = this.state.friends;
         friends.push({
           name: friendName.value,
           webId: friend.value,
           picture: friendPicture
         });
+
         this.setState({ friends: friends });
         return;
       });
     });
-  }
+  };
 
-  deleteFriend = (e) => {
-
+  deleteFriend = e => {
     let friendToDelete = e.target.id;
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
@@ -206,7 +203,7 @@ class App extends React.Component {
       if (ok) this.fetchFriends();
       else alert(message);
     });
-  }
+  };
 
   fetchPicture = () => {
     const store = $rdf.graph();
@@ -216,7 +213,7 @@ class App extends React.Component {
       picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto"));
       if (picture) this.setState({ picture: picture.value });
     });
-  }
+  };
 
   setPicture(e) {
     var filePath = e.target.files[0];
@@ -239,7 +236,7 @@ class App extends React.Component {
     reader.readAsArrayBuffer(filePath);
   }
 
-  setProfilePicture = (e) => {
+  setProfilePicture = e => {
     var filePath = e.target.files[0];
     var store = $rdf.graph();
     var fetcher = new $rdf.Fetcher(store);
@@ -261,12 +258,14 @@ class App extends React.Component {
         .then(response => {
           if (response.status === 201) {
             const updater = new $rdf.UpdateManager(store);
-            let del = (currentPicture) ? $rdf.st(
-              $rdf.sym(webId),
-              VCARD("hasPhoto"),
-              $rdf.sym(currentPicture),
-              $rdf.sym(webId).doc() 
-            ) : [];
+            let del = currentPicture
+              ? $rdf.st(
+                  $rdf.sym(webId),
+                  VCARD("hasPhoto"),
+                  $rdf.sym(currentPicture),
+                  $rdf.sym(webId).doc()
+                )
+              : [];
             let ins = $rdf.st(
               $rdf.sym(webId),
               VCARD("hasPhoto"),
@@ -284,7 +283,7 @@ class App extends React.Component {
         });
     };
     reader.readAsArrayBuffer(filePath);
-  }
+  };
 
   fetchUser() {
     auth.trackSession(session => {
