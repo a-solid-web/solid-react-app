@@ -7,25 +7,25 @@ import ModalBody from "react-bootstrap/ModalBody";
 import ModalFooter from "react-bootstrap/ModalFooter";
 import CardGroup from "react-bootstrap/CardGroup";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { FriendCard } from "./FriendCard";
 import AddFriend from "./AddFriend";
 import Inbox from "./Inbox";
 
 export default class VerticallyCenteredModal extends React.Component {
   render() {
-    let friendsMarkup = this.props.friends
-      ? this.props.friends.map((friend, index) => {
-          return (
-            <FriendCard
-              key={index}
-              friend={friend}
-              onClick={this.props.deleteFriend}
-            />
-          );
-        })
-      : "";
-
+    let friendsMarkup =
+      this.props.id == "friendsButton"
+        ? this.props.friends.map((friend, index) => {
+            return (
+              <FriendCard
+                key={index}
+                friend={friend}
+                onClick={this.props.deleteFriend}
+              />
+            );
+          })
+        : "";
+    
     return (
       <Modal
         {...this.props}
@@ -35,16 +35,31 @@ export default class VerticallyCenteredModal extends React.Component {
       >
         <ModalHeader>
           <ModalTitle id="contained-modal-title-vcenter">
-            {friendsMarkup ? "My Friends" : "My Messages"}
+            {this.props.id == "friendsButton" || "privacyButton" ? "My Friends" : "My Messages"}
           </ModalTitle>
         </ModalHeader>
         <ModalBody>
           <CardGroup>{friendsMarkup}</CardGroup>
-          {friendsMarkup ? <AddFriend /> : null}
-          <Row><Inbox webId={this.props.webid}/></Row>
+          {this.props.id == "friendsButton" ? <AddFriend /> : null}
+          <Row>
+            {this.props.id == "messageButton" ? (
+              <Inbox webId={this.props.webid} />
+            ) : (
+              ""
+            )}
+          </Row>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={this.props.onHide} id={this.props.id == "messageButton" ? "messageButton" : "friendsButton"}>Close</Button>
+          <Button
+            onClick={this.props.onHide}
+            id={
+              this.props.id == "messageButton"
+                ? "messageButton"
+                : "friendsButton"
+            }
+          >
+            Close
+          </Button>
         </ModalFooter>
       </Modal>
     );

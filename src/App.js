@@ -8,6 +8,8 @@ import VerticallyCenteredModal from "./components/VerticallyCenteredModal";
 import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
+import { PrivacyButton } from "./components/PrivacyButton";
+import FriendsModal from "./components/FriendsModal";
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
@@ -26,7 +28,7 @@ class App extends React.Component {
       friendsModal: false,
       inboxModal: false,
       pictureModal: false,
-      friends: [],
+      privacyModal: false,
       webId: "",
       picture: ""
     };
@@ -38,66 +40,15 @@ class App extends React.Component {
 
   toggleModal(e) {
     var modalAction = e.target.id;
+    console.log(modalAction)
     switch (modalAction) {
       case "friendsButton": this.setState({friendsModal: !this.state.friendsModal}); break;
       case "messageButton": this.setState({inboxModal: !this.state.inboxModal}); break;
       case "pictureButton": this.setState({pictureModal: !this.state.pictureModal}); break;
-
+      case "privacyButton": this.setState({privacyModal: !this.state.privacyModal}); break;
       default: break;
     }
   }
-
-  fetchFriends = () => {
-    const store = $rdf.graph();
-    const fetcher = new $rdf.Fetcher(store);
-
-    //loading friends into state
-    var friends = [];
-    fetcher.load(this.state.webId).then(response => {
-      friends = store.each($rdf.sym(this.state.webId), FOAF("knows"));
-
-      friends = friends.map(async friend => {
-        var friendName = "";
-        var friendPicture = "";
-
-        await fetcher.load(friend.value).then(response => {
-          friendName = store.any($rdf.sym(friend.value), FOAF("name"));
-          friendPicture = store.any($rdf.sym(friend.value), VCARD("hasPhoto"));
-
-          friendPicture = friendPicture ? friendPicture.value : "";
-        });
-
-        friends = this.state.friends;
-        friends.push({
-          name: friendName.value,
-          webId: friend.value,
-          picture: friendPicture
-        });
-
-        this.setState({ friends: friends });
-        return;
-      });
-    });
-  };
-
-  deleteFriend = e => {
-    let friendToDelete = e.target.id;
-    const store = $rdf.graph();
-    const updater = new $rdf.UpdateManager(store);
-
-    let ins = [];
-    let del = $rdf.st(
-      $rdf.sym(this.state.webId),
-      FOAF("knows"),
-      $rdf.sym(friendToDelete),
-      $rdf.sym(this.state.webId).doc()
-    );
-
-    updater.update(del, ins, (uri, ok, message) => {
-      if (ok) this.fetchFriends();
-      else alert(message);
-    });
-  };
 
   fetchPicture = () => {
     const store = $rdf.graph();
@@ -186,7 +137,6 @@ class App extends React.Component {
       } else {
         this.setState({ webId: session.webId });
         console.log(this.state.webId);
-        this.fetchFriends();
         this.fetchPicture();
       }
     });
@@ -233,22 +183,23 @@ class App extends React.Component {
                     show={this.state.inboxModal}
                     onHide={this.toggleModal.bind(this)}
                     id="messageButton"
-                    webid={this.state.webId}
+                    webid={(this.state.webId !== "") ? this.state.webId : ""}
                   />
-                  <VerticallyCenteredModal
-                    friends={this.state.friends}
+                  <FriendsModal
                     show={this.state.friendsModal}
                     onHide={this.toggleModal.bind(this)}
-                    deleteFriend={this.deleteFriend.bind(this)}
                     id="friendsButton"
+                    webid={this.state.webId}
                   />
-                  <VerticallyCenteredModal
-                    show={this.state.pictureModal}
+                  <FriendsModal
+                    friends={this.state.friends}
+                    show={this.state.privacyModal}
                     onHide={this.toggleModal.bind(this)}
-                    id="pictureButton"
+                    id="privacyButton"
                     webid={this.state.webId}
                   />
                 </LoggedIn>
+                <PrivacyButton onClick={this.toggleModal.bind(this)}/>
                 <LoggedOut>
                   <p>You are logged out.</p>
                 </LoggedOut>
@@ -257,9 +208,9 @@ class App extends React.Component {
                   login="Login here!"
                   logout="Logout here!"
                 />
-                <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
+                {/*<Button onClick={this.toggleModal.bind(this)} id="friendsButton">
                   Show My Permissions
-                </Button>
+                </Button>*/}
               </Col>
               <Col sm />
             </Row>
