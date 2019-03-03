@@ -4,10 +4,10 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import VerticallyCenteredModal from "./VerticallyCenteredModal";
-import { ProfilePicture } from "./ProfilePicture";
-import { AddPicture } from "./AddPicture";
-import { ChangeProfilePicture } from "./ChangeProfilePicture";
+import VerticallyCenteredModal from "./components/VerticallyCenteredModal";
+import { ProfilePicture } from "./components/ProfilePicture";
+import { AddPicture } from "./components/AddPicture";
+import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
