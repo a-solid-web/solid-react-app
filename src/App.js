@@ -8,6 +8,11 @@ import VerticallyCenteredModal from "./components/VerticallyCenteredModal";
 import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
+<<<<<<< HEAD:src/App.js
+=======
+import { PrivacyButton } from "./components/PrivacyButton";
+import FriendsModal from "./components/FriendsModal";
+>>>>>>> 945c8a1f06ed0b74bb57d464f71bf11184befa5b:src/App.js
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
@@ -26,8 +31,7 @@ class App extends React.Component {
       friendsModal: false,
       inboxModal: false,
       pictureModal: false,
-      friends: [],
-      messages: [],
+      privacyModal: false,
       webId: "",
       picture: ""
     };
@@ -39,177 +43,15 @@ class App extends React.Component {
 
   toggleModal(e) {
     var modalAction = e.target.id;
+    console.log(modalAction)
     switch (modalAction) {
       case "friendsButton": this.setState({friendsModal: !this.state.friendsModal}); break;
       case "messageButton": this.setState({inboxModal: !this.state.inboxModal}); break;
       case "pictureButton": this.setState({pictureModal: !this.state.pictureModal}); break;
+      case "privacyButton": this.setState({privacyModal: !this.state.privacyModal}); break;
+      default: break;
     }
   }
-
-  fetchMessages = () => {
-    function getActor(actor) {
-      actor = actor.split(".")[0];
-      console.log(actor);
-      actor = actor.replace("https://", "");
-      console.log(actor);
-      return actor;
-    }
-
-    function getAction(actions) {
-      for (var i = 0; i < actions.length; i++) {
-        if (
-          actions[i].value === "https://www.w3.org/ns/activitystreams#Announce"
-        ) {
-          let type = "shared";
-          return type;
-        }
-      }
-    }
-
-    function getTime(time) {
-      time = time.split("T");
-      let date = time[0];
-      time = time[1].replace("Z", "");
-      time = time.split(".")[0];
-      return [date, time];
-    }
-
-    function getTopics(topics) {
-      var filteredTopics = [];
-      for (var i = 0; i < topics.length; i++) {
-        var topic = topics[i].value;
-        if (topic !== "http://www.w3.org/ns/prov#Entity") {
-          if (topic.indexOf("#") !== -1) {
-            topic = topic.split("#")[1];
-            filteredTopics.push(topic);
-          } else {
-            topic = topic.split("/");
-            topic = topic[topic.length - 1];
-            filteredTopics.push(topic);
-          }
-        }
-      }
-      topics = "";
-      for (i = 0; i < filteredTopics.length; i++) {
-        if (i === filteredTopics.length - 1) {
-          topics += filteredTopics[i];
-        } else {
-          topics += filteredTopics[i] + ", ";
-        }
-      }
-      return topics;
-    }
-
-    const inboxAdress = this.state.webId.replace("profile/card#me", "inbox/");
-
-    const store = $rdf.graph();
-    const fetcher = new $rdf.Fetcher(store);
-
-    var inbox = [];
-    fetcher.load(inboxAdress).then(response => {
-      var messages = store.each($rdf.sym(inboxAdress), LDP("contains"));
-      messages = messages.map(async message => {
-        message = message.value;
-        const temp_store = $rdf.graph();
-        const temp_fetcher = new $rdf.Fetcher(temp_store);
-        await temp_fetcher.load(message).then(response => {
-          var action;
-          var topics;
-          var actor;
-          var document;
-          var time;
-
-          var messageTypes = temp_store.each($rdf.sym(message), RDF("type"));
-
-          action = action ? getAction(messageTypes) : "";
-
-          actor = temp_store.any($rdf.sym(message), ACT("actor"));
-          actor = actor ? getActor(actor.value) : "";
-
-          document = temp_store.any(
-            null,
-            RDF("type"),
-            $rdf.sym("http://rdfs.org/sioc/ns#Post")
-          );
-          document = document ? document.value : "";
-
-          topics = document
-            ? temp_store.each($rdf.sym(document), RDF("type"))
-            : "";
-          topics = topics ? getTopics(topics) : "";
-
-          time = temp_store.any($rdf.sym(message), ACT("updated"));
-          time = time ? getTime(time.value) : "";
-
-          let inboxEntry = {
-            action: action,
-            actor: actor,
-            document: document,
-            time: time,
-            topics: topics
-          };
-          topics = [];
-          console.log(inboxEntry);
-          inbox.push(inboxEntry);
-        });
-      });
-      this.setState({
-        messages: inbox
-      });
-    });
-  };
-
-  fetchFriends = () => {
-    const store = $rdf.graph();
-    const fetcher = new $rdf.Fetcher(store);
-
-    //loading friends into state
-    var friends = [];
-    fetcher.load(this.state.webId).then(response => {
-      friends = store.each($rdf.sym(this.state.webId), FOAF("knows"));
-
-      friends = friends.map(async friend => {
-        var friendName = "";
-        var friendPicture = "";
-
-        await fetcher.load(friend.value).then(response => {
-          friendName = store.any($rdf.sym(friend.value), FOAF("name"));
-          friendPicture = store.any($rdf.sym(friend.value), VCARD("hasPhoto"));
-
-          friendPicture = friendPicture ? friendPicture.value : "";
-        });
-
-        friends = this.state.friends;
-        friends.push({
-          name: friendName.value,
-          webId: friend.value,
-          picture: friendPicture
-        });
-
-        this.setState({ friends: friends });
-        return;
-      });
-    });
-  };
-
-  deleteFriend = e => {
-    let friendToDelete = e.target.id;
-    const store = $rdf.graph();
-    const updater = new $rdf.UpdateManager(store);
-
-    let ins = [];
-    let del = $rdf.st(
-      $rdf.sym(this.state.webId),
-      FOAF("knows"),
-      $rdf.sym(friendToDelete),
-      $rdf.sym(this.state.webId).doc()
-    );
-
-    updater.update(del, ins, (uri, ok, message) => {
-      if (ok) this.fetchFriends();
-      else alert(message);
-    });
-  };
 
   fetchPicture = () => {
     const store = $rdf.graph();
@@ -298,8 +140,6 @@ class App extends React.Component {
       } else {
         this.setState({ webId: session.webId });
         console.log(this.state.webId);
-        this.fetchMessages();
-        this.fetchFriends();
         this.fetchPicture();
       }
     });
@@ -343,25 +183,26 @@ class App extends React.Component {
                     Show My Messages
                   </Button>
                   <VerticallyCenteredModal
-                    messages={this.state.messages}
                     show={this.state.inboxModal}
                     onHide={this.toggleModal.bind(this)}
                     id="messageButton"
+                    webid={(this.state.webId !== "") ? this.state.webId : ""}
                   />
-                  <VerticallyCenteredModal
-                    friends={this.state.friends}
+                  <FriendsModal
                     show={this.state.friendsModal}
                     onHide={this.toggleModal.bind(this)}
-                    deleteFriend={this.deleteFriend.bind(this)}
                     id="friendsButton"
+                    webid={this.state.webId}
                   />
-                  <VerticallyCenteredModal
-                    show={this.state.pictureModal}
+                  <FriendsModal
+                    friends={this.state.friends}
+                    show={this.state.privacyModal}
                     onHide={this.toggleModal.bind(this)}
-                    id="pictureButton"
-                    webId={this.state.webId}
+                    id="privacyButton"
+                    webid={this.state.webId}
                   />
                 </LoggedIn>
+                <PrivacyButton onClick={this.toggleModal.bind(this)}/>
                 <LoggedOut>
                   <p>You are logged out.</p>
                 </LoggedOut>
@@ -370,6 +211,9 @@ class App extends React.Component {
                   login="Login here!"
                   logout="Logout here!"
                 />
+                {/*<Button onClick={this.toggleModal.bind(this)} id="friendsButton">
+                  Show My Permissions
+                </Button>*/}
               </Col>
               <Col sm />
             </Row>

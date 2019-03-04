@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { PrivacyButton } from "./PrivacyButton";
 
 export const FriendCard = props => {
   return (
@@ -19,6 +20,7 @@ export const FriendCard = props => {
         >
           Remove Friend
         </Button>
+        <PrivacyButton webid={props.friend.webId} access={props.friend.access} onClick={props.changeAccess}/>
       </Card.Body>
     </Card>
   );
