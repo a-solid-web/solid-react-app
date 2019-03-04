@@ -6,7 +6,7 @@ import ModalTitle from "react-bootstrap/ModalTitle";
 import ModalBody from "react-bootstrap/ModalBody";
 import ModalFooter from "react-bootstrap/ModalFooter";
 import CardGroup from "react-bootstrap/CardGroup";
-import { FriendCard } from "./FriendCard";
+import { FriendSlot } from "./FriendSlot";
 import AddFriend from "./AddFriend";
 
 const $rdf = require("rdflib");
@@ -25,19 +25,15 @@ export default class FriendsModal extends React.Component {
     };
   }
 
-  getFriendsAccess(friendsWebId){
-    const store = $rdf.graph();
-    const fetcher = new $rdf.Fetcher(store);
-
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/.acl#friend")
-    fetcher.load(settingsAddress).then((response) => {
-      return (store.any($rdf.sym(settingsAddress), ACL("agent"), $rdf.sym(friendsWebId))) == "" ? false : true;
-    })
-  }
-
   fetchFriends = () => {
     const store = $rdf.graph();
     const fetcher = new $rdf.Fetcher(store);
+
+    const permissionStore = $rdf.graph();
+    const permissionFetcher = new $rdf.Fetcher(permissionStore);
+
+    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/.acl#friend")
+    permissionFetcher.load(settingsAddress);
 
     //loading friends into state
     var friends = [];
@@ -55,7 +51,8 @@ export default class FriendsModal extends React.Component {
           friendPicture = store.any($rdf.sym(friend.value), VCARD("hasPhoto"));
           friendPicture = friendPicture ? friendPicture.value : "";
 
-          friendAccess = this.getFriendsAccess(friend.value);
+          friendAccess = permissionStore.statementsMatching($rdf.sym(settingsAddress), ACL("agent"), $rdf.sym(friend.value)).length > 0 ? true : false;
+          //console.log(friend.value, friendAccess)
         });
 
         friends = this.state.friends;
@@ -115,7 +112,7 @@ export default class FriendsModal extends React.Component {
     let ins = [];
 
     updater.update(del, ins, (uri, ok, message) => {
-        if (ok) console.log("Access given");
+        if (ok) console.log("Access denied");
         else alert(message);
     })
   }
@@ -145,7 +142,7 @@ export default class FriendsModal extends React.Component {
   render() {
     let friendsMarkup = this.state.friends.map((friend, index) => {
       return (
-        <FriendCard
+        <FriendSlot
           key={index}
           friend={friend}
           onClick={this.deleteFriend}
@@ -155,8 +152,6 @@ export default class FriendsModal extends React.Component {
         />
       );
     });
-
-    console.log(friendsMarkup);
 
     return (
       <Modal

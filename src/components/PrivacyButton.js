@@ -7,6 +7,6 @@ export const PrivacyButton = props => {
         id={props.webid}
         type="file"
         onClick={props.onClick}
-    >{props.access ? "Restrict Access" : "Give Access"}</Button>
+    >{props.permission ? "Restrict Access" : "Give Access"}</Button>
   );
 };
