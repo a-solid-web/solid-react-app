@@ -199,7 +199,6 @@ class App extends React.Component {
                     webid={this.state.webId}
                   />
                 </LoggedIn>
-                <PrivacyButton onClick={this.toggleModal.bind(this)}/>
                 <LoggedOut>
                   <p>You are logged out.</p>
                 </LoggedOut>

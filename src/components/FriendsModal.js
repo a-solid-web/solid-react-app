@@ -32,7 +32,7 @@ export default class FriendsModal extends React.Component {
     const permissionStore = $rdf.graph();
     const permissionFetcher = new $rdf.Fetcher(permissionStore);
 
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/.acl#friend")
+    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/prefs.ttl.acl#Read")
     permissionFetcher.load(settingsAddress);
 
     //loading friends into state
@@ -102,7 +102,7 @@ export default class FriendsModal extends React.Component {
   restrictAccess(e) {
     console.log("Giving access... to: ", e.target.id);
     var webId = e.target.id;
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/.acl#friend");
+    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/prefs.ttl.acl#friend");
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
@@ -120,7 +120,7 @@ export default class FriendsModal extends React.Component {
   giveAccess(e) {
     console.log("Giving access... to: ", e.target.id);
     var webId = e.target.id;
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/.acl#friend");
+    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/preffs.ttl.acl#friend");
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
