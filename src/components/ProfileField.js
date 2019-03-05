@@ -10,9 +10,9 @@ import TelephoneSlot from "./TelephoneSlot";
 const ProfileField = (props) => {
     const nameMarkup = props.name !== "" ? <NameSlot name={props.name}/> : ""; 
 
-    const bioMarkup = props.bio !== "" ? <JobSlot name={props.bio}/> : ""; 
+    const bioMarkup = props.bio !== "" ? <JobSlot job={props.bio}/> : ""; 
     
-    const jobMarkup = props.job !== "" ? <BioSlot name={props.job}/> : ""; 
+    const jobMarkup = props.job !== "" ? <BioSlot bio={props.job}/> : ""; 
 
     const emailSlots = props.emails.map((email, index) => {
         return (<EmailSlot key={index} email={email}/>)

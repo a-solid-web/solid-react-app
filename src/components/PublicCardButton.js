@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
-import { settings } from "cluster";
 
 
 const $rdf = require("rdflib");
@@ -11,7 +10,7 @@ const VCARD = new $rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
 const ACL = new $rdf.Namespace("http://www.w3.org/ns/auth/acl#");
 
 
-export default class ProfileDataPermissions extends React.Component {
+export default class PublicCardButton extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -62,7 +61,7 @@ export default class ProfileDataPermissions extends React.Component {
     }
     render() {
         return (
-            <Button
+            <Button>Make public</Button>
         )
     }
 }

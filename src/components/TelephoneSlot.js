@@ -1,6 +1,7 @@
 import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import PublicCardButton from "./PublicCardButton";
 
 const TelephoneSlot = (props) => {
     return (
@@ -12,7 +13,7 @@ const TelephoneSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    Hier steht mein PermissionButton
+                    <PublicCardButton/>
                 </Row>
             </Col>
         </Row>
