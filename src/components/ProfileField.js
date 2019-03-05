@@ -8,18 +8,18 @@ import BioSlot from "./BioSlot";
 import TelephoneSlot from "./TelephoneSlot";
 
 const ProfileField = (props) => {
-    const nameMarkup = props.name !== "" ? <NameSlot name={props.name}/> : ""; 
+    const nameMarkup = props.name !== "" ? <NameSlot webId={props.webId} name={props.name}/> : ""; 
 
-    const bioMarkup = props.bio !== "" ? <JobSlot job={props.bio}/> : ""; 
+    const bioMarkup = props.bio !== "" ? <BioSlot webId={props.webId} bio={props.bio}/> : ""; 
     
-    const jobMarkup = props.job !== "" ? <BioSlot bio={props.job}/> : ""; 
+    const jobMarkup = props.job !== "" ? <JobSlot webId={props.webId} job={props.job}/> : ""; 
 
     const emailSlots = props.emails.map((email, index) => {
-        return (<EmailSlot key={index} email={email}/>)
+        return (<EmailSlot webId={props.webId} key={index} email={email}/>)
     });
 
     const telephoneSlots = props.telephones.map((telephone, index) => {
-        return (<TelephoneSlot key={index} telephone={telephone}/>)
+        return (<TelephoneSlot webId={props.webId} key={index} telephone={telephone}/>)
     });
 
     return (

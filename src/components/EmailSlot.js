@@ -13,7 +13,7 @@ const EmailSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    <PublicCardButton/>
+                    <PublicCardButton webId={props.webId} email={props.email}/>
                 </Row>
             </Col>
         </Row>

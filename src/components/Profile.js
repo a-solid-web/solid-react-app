@@ -77,7 +77,7 @@ class Profile extends React.Component {
 
     render(){
         return (
-            <ProfileField name={this.state.name} emails={this.state.emails} job={this.state.job} bio={this.state.bio} telephones={this.state.telephones}/>
+            <ProfileField webId={this.state.webId} name={this.state.name} emails={this.state.emails} job={this.state.job} bio={this.state.bio} telephones={this.state.telephones}/>
         )
     }
 }

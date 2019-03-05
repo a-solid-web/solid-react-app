@@ -13,7 +13,7 @@ const JobSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    <PublicCardButton/>
+                    <PublicCardButton webId={props.webId} job={props.job}/>
                 </Row>
             </Col>
         </Row>

@@ -13,7 +13,7 @@ const TelephoneSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    <PublicCardButton/>
+                    <PublicCardButton webId={props.webId} telephone={props.telephone}/>
                 </Row>
             </Col>
         </Row>

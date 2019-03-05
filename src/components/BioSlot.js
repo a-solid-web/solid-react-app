@@ -13,7 +13,7 @@ const BioSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    <PublicCardButton/>
+                    <PublicCardButton webId={props.webId} bio={props.bio}/>
                 </Row>
             </Col>
         </Row>

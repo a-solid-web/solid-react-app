@@ -13,7 +13,7 @@ const NameSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
-                    <PublicCardButton/>
+                    <PublicCardButton webId={props.webId} name={props.name}/>
                 </Row>
             </Col>
         </Row>

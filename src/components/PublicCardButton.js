@@ -2,12 +2,12 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 
 
-const $rdf = require("rdflib");
-const auth = require("solid-auth-client");
+const rdf = require("rdflib");
 
-const FOAF = new $rdf.Namespace("http://xmlns.com/foaf/0.1/");
-const VCARD = new $rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
-const ACL = new $rdf.Namespace("http://www.w3.org/ns/auth/acl#");
+const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
+const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
+const RDF = new rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+const ACL = new rdf.Namespace("http://www.w3.org/ns/auth/acl#");
 
 
 export default class PublicCardButton extends React.Component {
@@ -19,8 +19,7 @@ export default class PublicCardButton extends React.Component {
         };
     }
 
-    giveAccess(e) {
-        console.log("Adding information to public profile");
+    makePublic() {
         var webId = this.state.webId;
         const publicCard = this.state.webId.replace("profile/card#me", "public/card");
         let viewerNode = this.state.webId.replace("profile/card#me", "public/card.acl#viewer");
@@ -28,40 +27,111 @@ export default class PublicCardButton extends React.Component {
         console.log(settingsAddress)
         // const documentAddress = settingsAddress.replace(".acl", "");
 
-        const store = $rdf.graph();
-        const updater = new $rdf.UpdateManager(store);
-        const fetcher = new $rdf.Fetcher(store);
+        const store = rdf.graph();
+        const updater = new rdf.UpdateManager(store);
+        const fetcher = new rdf.Fetcher(store);
 
-        fetcher.load(settingsAddress).then(() => {
-            let del = [];
-            let ins = [
-                $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
-                // $rdf.st($rdf.sym(publicCard), "don't know", )
+        var statementToAdd;
+
+        const emailToAdd = this.props.email ? this.props.email : undefined;
+        if(emailToAdd){
+            const blankNode = "id" + String.toString(Math.random() * 1000000)
+            statementToAdd = [
+                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasEmail"), store.bnode(blankNode), rdf.sym(publicCard).doc()),
+                rdf.st(rdf.sym(blankNode), VCARD("value"), rdf.lit(emailToAdd))
             ]
+        }
+
+        const nameToAdd = this.props.name ? this.props.name : undefined;
+        if(nameToAdd){
+            statementToAdd = rdf.st(rdf.sym(publicCard + "#me"), FOAF("name"), rdf.lit(nameToAdd), rdf.sym(publicCard).doc())
+        }
+
+        const jobToAdd = this.props.job ? this.props.job : undefined;
+        if(jobToAdd){
+            statementToAdd = rdf.st(rdf.sym(publicCard + "#me"), VCARD("role"), rdf.lit(jobToAdd), rdf.sym(publicCard).doc())
+        }
+
+        const telephoneToAdd = this.props.telephone ? this.props.telephone : undefined;
+        if(telephoneToAdd){
+            const blankNode = "id" + String.toString(Math.random() * 1000000)
+            statementToAdd = [
+                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasTelephone"), store.bnode(blankNode), rdf.sym(publicCard).doc()),
+                rdf.st(rdf.sym(blankNode), VCARD("value"), rdf.lit(telephoneToAdd))
+            ]
+        }
+
+        const bioToAdd = this.props.bio ? this.props.bio : undefined;
+        if(bioToAdd){
+            statementToAdd = rdf.st(rdf.sym(publicCard + "#me"), VCARD("note"), rdf.lit(bioToAdd), rdf.sym(publicCard).doc())
+        }
+
+        fetcher.load(publicCard).then(() => {
+            let del = [];
+
+            var ins;
+            if (Array.isArray(statementToAdd)){
+                ins = [
+                    statementToAdd[0],
+                    statementToAdd[1]
+                ]
+            } else {
+                ins = [
+                    statementToAdd
+                ]
+            }
 
             updater.update(del, ins, (uri, ok, message) => {
-                if(ok) console.log("ACL file for public folder creared")
+                if(ok) console.log("Data has been made public")
             })
         }).catch((err) => {
+            const publicId = publicCard + "#me";
+
+            var newPublicProfile;
+            if (Array.isArray(statementToAdd)){
+                newPublicProfile = [
+                    rdf.st(rdf.sym(publicId), RDF("type"), FOAF("Person")),
+                    rdf.st(rdf.sym(publicId), FOAF("name"), rdf.lit(publicId.split(".")[0].replace("https://", ""))),
+                    statementToAdd[0],
+                    statementToAdd[1]
+                ]
+            } else {
+                newPublicProfile = [
+                    rdf.st(rdf.sym(publicId), RDF("type"), FOAF("Person")),
+                    rdf.st(rdf.sym(publicId), FOAF("name"), rdf.lit(publicId.split(".")[0].replace("https://", ""))),
+                    statementToAdd
+                ]
+            }
+
+            updater.put(rdf.sym(publicCard), newPublicProfile, "text/turtle", function(uri, ok , message){
+                if (ok) console.log("New public card has been created");
+                else console.log(message)
+            })
+
             // Create new .acl file 
             const ownerNode = viewerNode.replace("#viewer", "owner");
 
             const newACLTriples = [
-                $rdf.st($rdf.sym(ownerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(ownerNode).doc()),
-                $rdf.st($rdf.sym(ownerNode), ACL("accessTo"), $rdf.sym(publicCard), $rdf.sym(ownerNode).doc()),
-                $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Control"), $rdf.sym(ownerNode).doc()),
-                $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Read"), $rdf.sym(ownerNode).doc()),
-                $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Write"), $rdf.sym(ownerNode).doc()),
-                $rdf.st($rdf.sym(viewerNode), ACL("agentClass"), FOAF("Agent"), $rdf.sym(viewerNode).doc()),
-                $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(publicCard), $rdf.sym(viewerNode).doc()),
-                $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc())
+                rdf.st(rdf.sym(ownerNode), ACL("agent"), rdf.sym(webId), rdf.sym(ownerNode).doc()),
+                rdf.st(rdf.sym(ownerNode), ACL("accessTo"), rdf.sym(publicCard), rdf.sym(ownerNode).doc()),
+                rdf.st(rdf.sym(ownerNode), ACL("mode"), ACL("Control"), rdf.sym(ownerNode).doc()),
+                rdf.st(rdf.sym(ownerNode), ACL("mode"), ACL("Read"), rdf.sym(ownerNode).doc()),
+                rdf.st(rdf.sym(ownerNode), ACL("mode"), ACL("Write"), rdf.sym(ownerNode).doc()),
+                rdf.st(rdf.sym(viewerNode), ACL("agentClass"), FOAF("Agent"), rdf.sym(viewerNode).doc()),
+                rdf.st(rdf.sym(viewerNode), ACL("accessTo"), rdf.sym(publicCard), rdf.sym(viewerNode).doc()),
+                rdf.st(rdf.sym(viewerNode), ACL("mode"), ACL("Read"), rdf.sym(viewerNode).doc())
             ]
-        })
 
+            updater.put(rdf.sym(publicCard + ".acl"), newACLTriples, "text/turtle", function(uri, ok , message){
+                if (ok) console.log("New ACL File has been created");
+                else console.log(message)
+            })
+        })
     }
+
     render() {
         return (
-            <Button>Make public</Button>
+            <Button onClick={this.makePublic.bind(this)}>Make public</Button>
         )
     }
 }
