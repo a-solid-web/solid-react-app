@@ -110,7 +110,7 @@ export default class FriendsModal extends React.Component {
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
 
-    const documentAddress = viewerNode.split("#")[0].replace(".acl", "");
+    //const documentAddress = viewerNode.split("#")[0].replace(".acl", "#me");
 
     let del = [
       $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
@@ -131,21 +131,6 @@ export default class FriendsModal extends React.Component {
     const settingsAddress = viewerNode.replace("#viewer", "");
     console.log(settingsAddress)
     const documentAddress = settingsAddress.split("#")[0].replace(".acl", "");
-
-    /*solid.web.head(settingsAddress).then((response) => {
-      if (!response.exists()){
-        solid.web.post(
-          "/settings/", //Data directory
-          `@prefix : <#>.
-        @prefix n0: <http://www.w3.org/ns/auth/acl#>.
-        @prefix c: </profile/card#>.
-        
-        :owner
-        n0:accessTo <prefs.ttl>; n0:agent c:me; n0:mode n0:Control, n0:Read, n0:Write.`, //Actual data
-        "prefs.ttl.acl"
-        )
-      }
-    })*/
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
@@ -172,7 +157,7 @@ export default class FriendsModal extends React.Component {
         $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Read"), $rdf.sym(ownerNode).doc()),
         $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Write"), $rdf.sym(ownerNode).doc()),
         $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
-        $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress + "#me"), $rdf.sym(viewerNode).doc()),
         $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc())
       ]
 
@@ -217,7 +202,7 @@ export default class FriendsModal extends React.Component {
         </ModalHeader>
         <ModalBody>
           <CardGroup>{friendsMarkup}</CardGroup>
-          <AddFriend />
+          <AddFriend webID={this.state.webId}/>
         </ModalBody>
         <ModalFooter>
           <Button onClick={this.props.onHide} id={this.props.id === "friendsButton" ? "friendsButton" : "privacyButton"}>

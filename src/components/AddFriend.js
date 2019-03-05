@@ -19,12 +19,11 @@ class AddFriend extends React.Component {
     });
   }
 
-  addFriend() {
+  addFriend = () => {
+    let webId = this.props.webID
     let friendToAdd = this.state.friendToAdd;
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
-
-    const webId = "https://ludwigschubert.solid.community/profile/card#me";
 
     let del = [];
     let ins = $rdf.st(
@@ -41,7 +40,7 @@ class AddFriend extends React.Component {
 
   render() {
     return (
-      <Form onSubmit={this.addFriend.bind(this)} style={{ marginTop: 5 }}>
+      <Form style={{ marginTop: 5 }}>
         <Form.Group>
           <Form.Label>Add a Friend:</Form.Label>
           <Form.Control
@@ -49,7 +48,7 @@ class AddFriend extends React.Component {
             placeholder="Enter your friends webId"
             onChange={this.changeFriendToAdd.bind(this)}
           />
-          <Button type="submit" style={{ marginTop: 5 }}>
+          <Button onClick={this.addFriend} style={{ marginTop: 5 }}>
             Add
           </Button>
         </Form.Group>
