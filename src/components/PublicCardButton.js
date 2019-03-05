@@ -11,7 +11,7 @@ const VCARD = new $rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
 const ACL = new $rdf.Namespace("http://www.w3.org/ns/auth/acl#");
 
 
-export default class PublicCardButton extends React.Component {
+export default class ProfileDataPermissions extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
