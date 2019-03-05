@@ -114,14 +114,12 @@ export default class FriendsModal extends React.Component {
 
     let del = [
       $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
-      $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
-      $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc()),
     ]
     let ins = [];
 
     updater.update(del, ins, (uri, ok, message) => {
         if (ok) console.log("Access denied");
-        else alert(message);
+        else console.log(message);
     })
     this.fetchUser();
   }
@@ -157,13 +155,11 @@ export default class FriendsModal extends React.Component {
       let del = [];
       let ins = [
         $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
-        $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
-        $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc()),
       ]
 
       updater.update(del, ins, (uri, ok, message) => {
           if (ok) console.log("Access given");
-          else alert(message);
+          else console.log(message);
       })
     }).catch((err) => {
       //Create new .acl file
@@ -182,7 +178,7 @@ export default class FriendsModal extends React.Component {
 
       updater.put($rdf.sym(settingsAddress), newACLTriples, "text/turtle", function(uri, ok , message){
         if (ok) console.log("New ACL File has been created");
-        else alert(message)
+        else console.log(message)
       })
     });
     
