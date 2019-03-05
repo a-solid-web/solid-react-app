@@ -9,6 +9,7 @@ import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
 import FriendsModal from "./components/FriendsModal";
+import Profile from "./components/Profile";
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
@@ -147,8 +148,8 @@ class App extends React.Component {
         <main>
           <Container>
             <Row>
-              <Col sm />
-              <Col md>
+              <Col md="1" />
+              <Col md="10">
                 <LoggedIn>
                   <Row>
                     <Col md="8">
@@ -165,6 +166,7 @@ class App extends React.Component {
                       </Row>
                     </Col>
                   </Row>
+                  <Profile/>
                   <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
                     Show My Friends
                   </Button>
@@ -206,7 +208,7 @@ class App extends React.Component {
                   Show My Permissions
                 </Button>*/}
               </Col>
-              <Col sm />
+              <Col md="1" />
             </Row>
           </Container>
         </main>
