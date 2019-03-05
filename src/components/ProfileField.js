@@ -8,6 +8,12 @@ import BioSlot from "./BioSlot";
 import TelephoneSlot from "./TelephoneSlot";
 
 const ProfileField = (props) => {
+    const nameMarkup = props.name !== "" ? <NameSlot name={props.name}/> : ""; 
+
+    const bioMarkup = props.bio !== "" ? <JobSlot name={props.bio}/> : ""; 
+    
+    const jobMarkup = props.job !== "" ? <BioSlot name={props.job}/> : ""; 
+
     const emailSlots = props.emails.map((email, index) => {
         return (<EmailSlot key={index} email={email}/>)
     });
@@ -20,9 +26,9 @@ const ProfileField = (props) => {
         <Row>
             <Col md="6">
                 <Row style={{width: "100%"}}>
-                    <NameSlot name={props.name}/>
-                    <JobSlot job={props.job}/>
-                    <BioSlot bio={props.bio}/>
+                    {nameMarkup}
+                    {jobMarkup}
+                    {bioMarkup}
                 </Row>
             </Col>
             <Col md="6">
