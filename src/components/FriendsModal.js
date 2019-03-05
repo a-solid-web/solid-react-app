@@ -21,7 +21,7 @@ export default class FriendsModal extends React.Component {
     super(props);
     this.state = {
       friends: [],
-      webId: ""
+      webId: "",
     };
   }
 
@@ -32,11 +32,13 @@ export default class FriendsModal extends React.Component {
     const permissionStore = $rdf.graph();
     const permissionFetcher = new $rdf.Fetcher(permissionStore);
 
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/prefs.ttl.acl#Read")
-    permissionFetcher.load(settingsAddress);
+    let viewerNode = this.state.webId.replace("card#me", "card.acl#viewer")
+    permissionFetcher.load(viewerNode);
 
     //loading friends into state
     var friends = [];
+    this.setState({friends: friends})
+
     fetcher.load(this.state.webId).then(response => {
       friends = store.each($rdf.sym(this.state.webId), FOAF("knows"));
 
@@ -51,7 +53,7 @@ export default class FriendsModal extends React.Component {
           friendPicture = store.any($rdf.sym(friend.value), VCARD("hasPhoto"));
           friendPicture = friendPicture ? friendPicture.value : "";
 
-          friendAccess = permissionStore.statementsMatching($rdf.sym(settingsAddress), ACL("agent"), $rdf.sym(friend.value)).length > 0 ? true : false;
+          friendAccess = permissionStore.statementsMatching($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(friend.value)).length > 0 ? true : false;
           //console.log(friend.value, friendAccess)
         });
 
@@ -93,6 +95,7 @@ export default class FriendsModal extends React.Component {
       if (!session) {
         console.log("You are not logged in");
       } else {
+        console.log("You are logged in")
         this.setState({ webId: session.webId });
         this.fetchFriends();
       }
@@ -102,37 +105,88 @@ export default class FriendsModal extends React.Component {
   restrictAccess(e) {
     console.log("Giving access... to: ", e.target.id);
     var webId = e.target.id;
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/prefs.ttl.acl#friend");
+    let viewerNode = this.state.webId.replace("card#me", "card.acl#viewer");
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
 
-    console.log(settingsAddress)
-    let del = $rdf.st($rdf.sym(settingsAddress), ACL("agent"), $rdf.sym(webId), $rdf.sym(settingsAddress).doc());
+    const documentAddress = viewerNode.split("#")[0].replace(".acl", "");
+
+    let del = [
+      $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
+      $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
+      $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc()),
+    ]
     let ins = [];
 
     updater.update(del, ins, (uri, ok, message) => {
         if (ok) console.log("Access denied");
         else alert(message);
     })
+    this.fetchUser();
   }
 
   giveAccess(e) {
     console.log("Giving access... to: ", e.target.id);
     var webId = e.target.id;
-    let settingsAddress = this.state.webId.replace("profile/card#me", "settings/preffs.ttl.acl#friend");
+    let viewerNode = this.state.webId.replace("#me", ".acl#viewer");
+    const settingsAddress = viewerNode.replace("#viewer", "");
+    console.log(settingsAddress)
+    const documentAddress = settingsAddress.split("#")[0].replace(".acl", "");
+
+    /*solid.web.head(settingsAddress).then((response) => {
+      if (!response.exists()){
+        solid.web.post(
+          "/settings/", //Data directory
+          `@prefix : <#>.
+        @prefix n0: <http://www.w3.org/ns/auth/acl#>.
+        @prefix c: </profile/card#>.
+        
+        :owner
+        n0:accessTo <prefs.ttl>; n0:agent c:me; n0:mode n0:Control, n0:Read, n0:Write.`, //Actual data
+        "prefs.ttl.acl"
+        )
+      }
+    })*/
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
+    const fetcher = new $rdf.Fetcher(store)
 
-    console.log(settingsAddress)
-    let del = [];
-    let ins = $rdf.st($rdf.sym(settingsAddress), ACL("agent"), $rdf.sym(webId), $rdf.sym(settingsAddress).doc());
+    fetcher.load(settingsAddress).then(() => {
+      let del = [];
+      let ins = [
+        $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc()),
+      ]
 
-    updater.update(del, ins, (uri, ok, message) => {
-        if (ok) console.log("Access given");
-        else alert(message);
-    })
+      updater.update(del, ins, (uri, ok, message) => {
+          if (ok) console.log("Access given");
+          else alert(message);
+      })
+    }).catch((err) => {
+      //Create new .acl file
+      const ownerNode = this.state.webId.replace("card#me", "card.acl#owner")
+
+      const newACLTriples = [
+        $rdf.st($rdf.sym(ownerNode), ACL("agent"), $rdf.sym(this.state.webId), $rdf.sym(ownerNode).doc()),
+        $rdf.st($rdf.sym(ownerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(ownerNode).doc()),
+        $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Control"), $rdf.sym(ownerNode).doc()),
+        $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Read"), $rdf.sym(ownerNode).doc()),
+        $rdf.st($rdf.sym(ownerNode), ACL("mode"), ACL("Write"), $rdf.sym(ownerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("agent"), $rdf.sym(webId), $rdf.sym(viewerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("accessTo"), $rdf.sym(documentAddress), $rdf.sym(viewerNode).doc()),
+        $rdf.st($rdf.sym(viewerNode), ACL("mode"), ACL("Read"), $rdf.sym(viewerNode).doc())
+      ]
+
+      updater.put($rdf.sym(settingsAddress), newACLTriples, "text/turtle", function(uri, ok , message){
+        if (ok) console.log("New ACL File has been created");
+        else alert(message)
+      })
+    });
+    
+    this.fetchUser();
   }
 
   componentWillMount() {
@@ -162,7 +216,7 @@ export default class FriendsModal extends React.Component {
       >
         <ModalHeader>
           <ModalTitle id="contained-modal-title-vcenter">
-            {this.props.id == "friendsButton" ? "My Friends" : "My Messages"}
+            {this.props.id === "friendsButton" ? "My Friends" : "My Messages"}
           </ModalTitle>
         </ModalHeader>
         <ModalBody>
@@ -170,7 +224,7 @@ export default class FriendsModal extends React.Component {
           <AddFriend />
         </ModalBody>
         <ModalFooter>
-          <Button onClick={this.props.onHide} id={this.props.id == "friendsButton" ? "friendsButton" : "privacyButton"}>
+          <Button onClick={this.props.onHide} id={this.props.id === "friendsButton" ? "friendsButton" : "privacyButton"}>
             Close
           </Button>
         </ModalFooter>

@@ -14,7 +14,7 @@ import Inbox from "./Inbox";
 export default class VerticallyCenteredModal extends React.Component {
   render() {
     let friendsMarkup =
-      this.props.id == "friendsButton"
+      this.props.id === "friendsButton"
         ? this.props.friends.map((friend, index) => {
             return (
               <FriendCard
@@ -35,14 +35,14 @@ export default class VerticallyCenteredModal extends React.Component {
       >
         <ModalHeader>
           <ModalTitle id="contained-modal-title-vcenter">
-            {this.props.id == "friendsButton" || "privacyButton" ? "My Friends" : "My Messages"}
+            {this.props.id === "friendsButton" || "privacyButton" ? "My Friends" : "My Messages"}
           </ModalTitle>
         </ModalHeader>
         <ModalBody>
           <CardGroup>{friendsMarkup}</CardGroup>
-          {this.props.id == "friendsButton" ? <AddFriend /> : null}
+          {this.props.id === "friendsButton" ? <AddFriend /> : null}
           <Row>
-            {this.props.id == "messageButton" ? (
+            {this.props.id === "messageButton" ? (
               <Inbox webId={this.props.webid} />
             ) : (
               ""
@@ -53,7 +53,7 @@ export default class VerticallyCenteredModal extends React.Component {
           <Button
             onClick={this.props.onHide}
             id={
-              this.props.id == "messageButton"
+              this.props.id === "messageButton"
                 ? "messageButton"
                 : "friendsButton"
             }

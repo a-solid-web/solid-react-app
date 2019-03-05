@@ -1,6 +1,4 @@
 import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { Messages } from "./Messages";
 
 const $rdf = require("rdflib");
@@ -79,7 +77,7 @@ class Inbox extends React.Component {
     var inbox = [];
     fetcher.load(inboxAdress).then(response => {
       var messages = store.each($rdf.sym(inboxAdress), LDP("contains"));
-      messages = messages.map(async message => {
+      messages.map(async message => {
         message = message.value;
         const temp_store = $rdf.graph();
         const temp_fetcher = new $rdf.Fetcher(temp_store);

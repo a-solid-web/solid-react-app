@@ -8,17 +8,12 @@ import VerticallyCenteredModal from "./components/VerticallyCenteredModal";
 import { ProfilePicture } from "./components/ProfilePicture";
 import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
-import { PrivacyButton } from "./components/PrivacyButton";
 import FriendsModal from "./components/FriendsModal";
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
 
-const FOAF = new $rdf.Namespace("http://xmlns.com/foaf/0.1/");
-const LDP = new $rdf.Namespace("http://www.w3.org/ns/ldp#");
-const RDF = new $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 const VCARD = new $rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
-const ACT = new $rdf.Namespace("https://www.w3.org/ns/activitystreams#");
 
 class App extends React.Component {
   constructor(props) {
