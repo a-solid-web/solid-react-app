@@ -2,6 +2,7 @@ import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PublicCardButton from "./PublicCardButton";
+import EditButton from "./EditButton";
 
 const JobSlot = (props) => {
     return (
@@ -13,6 +14,7 @@ const JobSlot = (props) => {
             </Col>
             <Col md="4">
                 <Row style={{width: "100%"}}>
+                    <EditButton webid={props.webId} context="job title" currentvalue={props.job}/>
                     <PublicCardButton webId={props.webId} job={props.job}/>
                 </Row>
             </Col>

@@ -40,7 +40,7 @@ class Profile extends React.Component {
                 var emails = [];
                 store.each(rdf.sym(webId), VCARD("hasEmail")).forEach((emailBlankId) => {
                     store.each(rdf.sym(emailBlankId), VCARD("value")).forEach((emailAddress) => {
-                        emails.push(emailAddress.value)
+                        emails.push([emailAddress.value, emailBlankId.value]);
                     })
                 });
 
@@ -53,7 +53,7 @@ class Profile extends React.Component {
                 var telephones = [];
                 store.each(rdf.sym(webId), VCARD("hasTelephone")).forEach((telephoneBlankId) => {
                     store.each(rdf.sym(telephoneBlankId), VCARD("value")).forEach((telephoneNumber) => {
-                        telephones.push(telephoneNumber.value)
+                        telephones.push([telephoneNumber.value, telephoneBlankId.value]);
                     })
                 });
 
@@ -64,8 +64,6 @@ class Profile extends React.Component {
                     bio: bioValue,
                     telephones: telephones
                 })
-
-                console.log(this.state)
             }); 
           }
         });
