@@ -35,10 +35,10 @@ export default class PublicCardButton extends React.Component {
 
         const emailToAdd = this.props.email ? this.props.email : undefined;
         if(emailToAdd){
-            const blankNode = "id" + String.toString(Math.random() * 1000000)
+            const blankNode = "id" + String(Math.floor(Math.random() * 1000000))
             statementToAdd = [
-                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasEmail"), store.bnode(blankNode), rdf.sym(publicCard).doc()),
-                rdf.st(rdf.sym(blankNode), VCARD("value"), rdf.lit(emailToAdd))
+                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasEmail"), rdf.sym(publicCard + "#" + blankNode), rdf.sym(publicCard).doc()),
+                rdf.st(rdf.sym(publicCard + "#" + blankNode), VCARD("value"), rdf.sym(emailToAdd), rdf.sym(publicCard).doc())
             ]
         }
 
@@ -54,10 +54,11 @@ export default class PublicCardButton extends React.Component {
 
         const telephoneToAdd = this.props.telephone ? this.props.telephone : undefined;
         if(telephoneToAdd){
-            const blankNode = "id" + String.toString(Math.random() * 1000000)
+            const blankNode = "id" + String(Math.floor(Math.random() * 1000000))
+            console.log(store.bnode(blankNode));
             statementToAdd = [
-                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasTelephone"), store.bnode(blankNode), rdf.sym(publicCard).doc()),
-                rdf.st(rdf.sym(blankNode), VCARD("value"), rdf.lit(telephoneToAdd))
+                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasTelephone"), rdf.sym(publicCard + "#" + blankNode), rdf.sym(publicCard).doc()),
+                rdf.st(rdf.sym(publicCard + "#" + blankNode), VCARD("value"), rdf.sym(telephoneToAdd),rdf.sym(publicCard).doc())
             ]
         }
 
@@ -66,8 +67,15 @@ export default class PublicCardButton extends React.Component {
             statementToAdd = rdf.st(rdf.sym(publicCard + "#me"), VCARD("note"), rdf.lit(bioToAdd), rdf.sym(publicCard).doc())
         }
 
+        var statementToDelete; 
+
         fetcher.load(publicCard).then(() => {
-            let del = [];
+            if(bioToAdd) {
+                statementToDelete = store.statementsMatching(rdf.sym(publicCard + "#me"), VCARD("note"), null, rdf.sym(publicCard).doc());
+            }
+
+            let del = [statementToDelete[0]];
+            console.log(statementToDelete[0])
 
             var ins;
             if (Array.isArray(statementToAdd)){
@@ -80,6 +88,7 @@ export default class PublicCardButton extends React.Component {
                     statementToAdd
                 ]
             }
+            console.log(ins)
 
             updater.update(del, ins, (uri, ok, message) => {
                 if(ok) console.log("Data has been made public")
