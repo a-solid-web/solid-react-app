@@ -37,13 +37,8 @@ export default class PublicCardButton extends React.Component {
         if(emailToAdd){
             const blankNode = "id" + String(Math.floor(Math.random() * 1000000))
             statementToAdd = [
-<<<<<<< HEAD
                 rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasEmail"), rdf.sym(publicCard + "#" + blankNode), rdf.sym(publicCard).doc()),
                 rdf.st(rdf.sym(publicCard + "#" + blankNode), VCARD("value"), rdf.sym(emailToAdd), rdf.sym(publicCard).doc())
-=======
-                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasEmail"), rdf.sym(publicCard + "#"  + blankNode), rdf.sym(publicCard).doc()),
-                rdf.st(rdf.sym(publicCard + "#"  + blankNode), VCARD("value"), rdf.sym(emailToAdd), rdf.sym(publicCard).doc())
->>>>>>> debec3d0bac220356bc25c074d47c58351085407
             ]
         }
 
@@ -60,16 +55,10 @@ export default class PublicCardButton extends React.Component {
         const telephoneToAdd = this.props.telephone ? this.props.telephone : undefined;
         if(telephoneToAdd){
             const blankNode = "id" + String(Math.floor(Math.random() * 1000000))
-<<<<<<< HEAD
             console.log(store.bnode(blankNode));
             statementToAdd = [
                 rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasTelephone"), rdf.sym(publicCard + "#" + blankNode), rdf.sym(publicCard).doc()),
                 rdf.st(rdf.sym(publicCard + "#" + blankNode), VCARD("value"), rdf.sym(telephoneToAdd),rdf.sym(publicCard).doc())
-=======
-            statementToAdd = [
-                rdf.st(rdf.sym(publicCard + "#me"), FOAF("hasTelephone"), rdf.sym(publicCard + "#"  + blankNode), rdf.sym(publicCard).doc()),
-                rdf.st(rdf.sym(publicCard + "#"  + blankNode), VCARD("value"), rdf.sym(telephoneToAdd), rdf.sym(publicCard).doc())
->>>>>>> debec3d0bac220356bc25c074d47c58351085407
             ]
         }
 
