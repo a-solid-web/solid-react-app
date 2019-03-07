@@ -94,7 +94,7 @@ export default class EditModal extends React.Component {
         </ModalHeader>
         <ModalBody>
             <InputGroup>
-                <FormControl placeholder={"Enter your " + this.props.context} onChange={this.getNewValue.bind(this)} defaultValue={this.state.currentValue}></FormControl>
+                <FormControl placeholder={"Enter your " + this.props.context} onChange={this.getNewValue.bind(this)} defaultValue={Array.isArray(this.state.currentValue) ? this.state.currentValue[0] : this.state.currentValue}></FormControl>
             </InputGroup>
         </ModalBody>
         <ModalFooter>

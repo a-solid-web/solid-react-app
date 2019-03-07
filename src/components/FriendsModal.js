@@ -22,6 +22,7 @@ export default class FriendsModal extends React.Component {
     this.state = {
       friends: [],
       webId: "",
+      accessFilter: false
     };
   }
 
@@ -170,22 +171,42 @@ export default class FriendsModal extends React.Component {
     this.fetchUser();
   }
 
+  toggleAccessFilter(){
+    this.setState({accessFilter: !this.state.accessFilter});
+    this.fetchFriends();
+  }
+
   componentWillMount() {
     this.fetchUser();
   }
 
   render() {
     let friendsMarkup = this.state.friends.map((friend, index) => {
-      return (
-        <FriendSlot
-          key={index}
-          friend={friend}
-          onClick={this.deleteFriend}
-          changeAccess={
-            friend.access ? this.restrictAccess.bind(this) : this.giveAccess.bind(this)
-          }
-        />
-      );
+      if (this.state.accessFilter){
+        if(friend.access){
+          return (
+            <FriendSlot
+              key={index}
+              friend={friend}
+              onClick={this.deleteFriend}
+              changeAccess={
+                friend.access ? this.restrictAccess.bind(this) : this.giveAccess.bind(this)
+              }
+            />
+          );
+        }
+      } else {
+        return (
+          <FriendSlot
+            key={index}
+            friend={friend}
+            onClick={this.deleteFriend}
+            changeAccess={
+              friend.access ? this.restrictAccess.bind(this) : this.giveAccess.bind(this)
+            }
+          />
+        );
+      }
     });
 
     return (
@@ -199,6 +220,7 @@ export default class FriendsModal extends React.Component {
           <ModalTitle id="contained-modal-title-vcenter">
             {this.props.id === "friendsButton" ? "My Friends" : "My Messages"}
           </ModalTitle>
+          <Button onClick={this.toggleAccessFilter.bind(this)}>Filter for Access</Button>
         </ModalHeader>
         <ModalBody>
           <CardGroup>{friendsMarkup}</CardGroup>
