@@ -75,7 +75,7 @@ class Profile extends React.Component {
 
     render(){
         return (
-            <ProfileField webId={this.state.webId} name={this.state.name} emails={this.state.emails} job={this.state.job} bio={this.state.bio} telephones={this.state.telephones} onApplyChanges={this.fetchUser.bind(this)}/>
+            <ProfileField webId={this.state.webId} name={this.state.name} emails={this.state.emails} job={this.state.job} bio={this.state.bio} telephones={this.state.telephones}/>
         )
     }
 }

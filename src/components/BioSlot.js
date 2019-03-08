@@ -25,7 +25,6 @@ class BioSlot extends React.Component {
           if (!session) {
             console.log("You are not logged in");
           } else {
-            console.log("You are logged in")
             this.setState({ webId: session.webId });
           }
         });
@@ -42,7 +41,10 @@ class BioSlot extends React.Component {
         ins = rdf.st(rdf.sym(this.state.webId), VCARD("note"), rdf.lit(this.state.newValue), rdf.sym(this.state.webId).doc());
   
         updater.update(del, ins, (uri, ok, message) => {
-            if(ok) console.log("Changes have been applied");
+            if(ok) {
+                let newValue = this.state.newValue;
+                this.setState({editMode: false, currentValue: newValue});
+            }
             else alert(message);
         });
         this.setState({editMode: false});

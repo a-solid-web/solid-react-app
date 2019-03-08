@@ -25,7 +25,6 @@ class EmailSlot extends React.Component {
           if (!session) {
             console.log("You are not logged in");
           } else {
-            console.log("You are logged in")
             this.setState({ webId: session.webId });
           }
         });
@@ -42,11 +41,12 @@ class EmailSlot extends React.Component {
         ins = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(this.state.webId).doc());
   
         updater.update(del, ins, (uri, ok, message) => {
-            if(ok) console.log("Changes have been applied");
+            if(ok) {
+                let newValue = ["mailto:" + this.state.newValue, this.state.currentValue[1]];
+                this.setState({editMode: false, currentValue: newValue});
+            }
             else alert(message);
         });
-        let newValue = [this.state.newValue, this.state.currentValue[1]]
-        this.setState({editMode: false, currentValue: newValue});
     }
 
     getNewValue(e){
@@ -62,8 +62,7 @@ class EmailSlot extends React.Component {
     }
 
     render(){
-        let slotMarkup = (this.state.editMode) ? <FormControl placeholder={this.props.email[0].split(":")[1]} onChange={this.getNewValue.bind(this)} onBlur={this.applyChanges.bind(this)} defaultValue={this.props.email[0].split(":")[1]}></FormControl> : <p onClick={this.toggleEditMode.bind(this)}>{this.state.currentValue[0].split(":")[1]}</p>
-
+        let slotMarkup = (this.state.editMode) ? <FormControl placeholder={this.state.currentValue[0].split(":")[1]} onChange={this.getNewValue.bind(this)} onBlur={this.applyChanges.bind(this)} defaultValue={this.state.currentValue[0].split(":")[1]}></FormControl> : <p onClick={this.toggleEditMode.bind(this)}>{this.state.currentValue[0].split(":")[1]}</p>
         return (
             <Row style={{border: "solid #FFF 5px", borderRadius: "10", width: "100%"}}>
                 <Col md="8">

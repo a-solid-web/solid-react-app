@@ -25,7 +25,6 @@ class TelephoneSlot extends React.Component {
           if (!session) {
             console.log("You are not logged in");
           } else {
-            console.log("You are logged in")
             this.setState({ webId: session.webId });
           }
         });
@@ -42,10 +41,12 @@ class TelephoneSlot extends React.Component {
         ins = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym("tel:" + this.state.newValue), rdf.sym(this.state.webId).doc());
   
         updater.update(del, ins, (uri, ok, message) => {
-            if(ok) console.log("Changes have been applied");
+            if(ok) {
+                let newValue = ["tel:" + this.state.newValue, this.state.currentValue[1]];
+                this.setState({editMode: false, currentValue: newValue});
+            }
             else alert(message);
         });
-        this.setState({editMode: false});
     }
 
     getNewValue(e){
