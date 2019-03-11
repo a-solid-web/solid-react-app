@@ -194,6 +194,8 @@ export default class FriendsModal extends React.Component {
               }
             />
           );
+        } else {
+          return "";
         }
       } else {
         return (

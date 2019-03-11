@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "react-bootstrap/Image";
 
-export const ProfilePicture = props => {
+const ProfilePicture = (props) => {
   return (
     <Image
       style={{
@@ -15,3 +15,5 @@ export const ProfilePicture = props => {
     />
   );
 };
+
+export default ProfilePicture;

@@ -10,6 +10,7 @@ import { AddPicture } from "./components/AddPicture";
 import { ChangeProfilePicture } from "./components/ChangeProfilePicture";
 import FriendsModal from "./components/FriendsModal";
 import Profile from "./components/Profile";
+import LoginView from "./components/LoginView";
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
@@ -197,7 +198,7 @@ class App extends React.Component {
                   />
                 </LoggedIn>
                 <LoggedOut>
-                  <p>You are logged out.</p>
+                  <LoginView/>
                 </LoggedOut>
                 <AuthButton
                   popup="popup.html"
