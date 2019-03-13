@@ -23,7 +23,7 @@ const ProfileField = (props) => {
     });
 
     return (
-        <Row>
+        <Row style={{marginTop: "20px"}}>
             <Col md="6">
                 <Row style={{width: "100%"}}>
                     {nameMarkup}
