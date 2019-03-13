@@ -95,6 +95,7 @@ export default class PublicCardButton extends React.Component {
             })
         }).catch((err) => {
             const publicId = publicCard + "#me";
+            console.log(publicId);
 
             var newPublicProfile;
             if (Array.isArray(statementToAdd)){
