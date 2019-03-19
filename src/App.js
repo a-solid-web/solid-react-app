@@ -2,11 +2,10 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom"; 
 import Home from "./components/Home";
 import PublicProfile from "./components/PublicProfile"; 
-import ErrorPage from "./components/ErrorPage";
 import Register from "./components/Register";
-import Test from "./components/Test";
+import MessagePage from "./components/MessagePage";
 import Navigation from "./components/Navigation";
-
+import Chat from "./components/Chat";
 
 const App = (props) => {
 
@@ -19,7 +18,8 @@ const App = (props) => {
           <Route path="/public/card" component={PublicProfile} />
           {/* <Route component={ErrorPage}/> */}
           <Route path="/register" component={Register} />
-          <Route path="/test" component={Test} />
+          <Route path="/messages" component={MessagePage} />
+          <Route path="/chat" component={Chat}/>
         </Switch>  
       </div>
     </BrowserRouter>

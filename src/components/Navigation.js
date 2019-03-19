@@ -6,14 +6,15 @@ import Nav from "react-bootstrap/Nav";
 
 const Navigation = () => {
     return(
-        <div>
+        <div style={{padding: "5%"}}>
             <Navbar bg="dark" variant="dark" fixed="top">
                 <Navbar.Brand>SOLID</Navbar.Brand>
                 <Nav className="mr-auto">
                     <NavLink to="/" style={{marginLeft: "20px"}}>Home</NavLink>
                     <NavLink to="/public/card" style={{marginLeft: "20px"}}>Publicprofile</NavLink>
                     <NavLink to="/register" style={{marginLeft: "20px"}}>Register</NavLink>
-                    <NavLink to="/test" style={{marginLeft: "20px"}}>Test</NavLink>
+                    <NavLink to="/messages" style={{marginLeft: "20px"}}>Messages</NavLink>
+                    <NavLink to="/chat" style={{marginLeft: "20px"}}>Chat</NavLink>
                 </Nav>
             </Navbar>
             <br/>
