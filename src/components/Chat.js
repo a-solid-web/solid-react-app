@@ -133,18 +133,18 @@ export default class Chat extends React.Component {
     })
 
     fetcher.load(friendsInboxAddress).then((response) => {
-        const friendsMessages = store.each(friendsInboxAddress, FLOW("message")).map((message) => {
-            message = rdf.sym(message);
+        const friendMessages = store.each(rdf.sym(friendsInboxAddress), FLOW("message")).map((message) => {
+            message = rdf.sym(message.value);
             const messageContent = store.any(message, SIOC("content"));
             const messageTimestamp = store.any(message, DC("created"));
-            const altMessageTimestamp = messageTimestamp ? "" : store.any(message,TERMS("created"));
+            const altMessageTimestamp = messageTimestamp ? "" : store.any(message, TERMS("created"));
             const messageContentValue = messageContent.value
             const messageTimestampValue = messageTimestamp ? messageTimestamp.value : altMessageTimestamp.value
             return {"content": messageContentValue, "created": messageTimestampValue};
-        });
-        this.setState({
-            friendsMessages: friendsMessages
         })
+        this.setState({
+            friendMessages: friendMessages
+        });
     }).catch((err) => {
         console.log("This friend has no chat with you yet.");
     })
@@ -252,12 +252,12 @@ export default class Chat extends React.Component {
 
     var messages = [];
     for (var message in ownMessages){
-        messages.push(ownMessages[message]);
+        messages.push({"message": ownMessages[message], "from": "me"});
         //console.log(new Date(ownMessages[message].created))
     }
 
     for (message in friendMessages){
-        messages.push(friendMessages[message]);
+        messages.push({"message": friendMessages[message], "from": "friend"});
     }
 
     messages.sort(function(a,b){
@@ -269,7 +269,7 @@ export default class Chat extends React.Component {
     });
     
     let chatMarkup = messages.map((message) => {
-        return (<Message ownMessage={message.content}/>);
+        return (<Message message={message.message} from={message.from}/>);
     })
 
     // let chatMarkup = this.state.ownMessages.map((message) => {

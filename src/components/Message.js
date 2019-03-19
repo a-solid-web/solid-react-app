@@ -6,10 +6,10 @@ const Message = (props) => {
   return (
     <Row>
       <Col lg={{span: 6}}>
-        {props.friendMessage ? props.friendMessage : ""}
+        {props.from === "friend" ? props.message.content : ""}
       </Col>
       <Col lg={{span: 6}}>
-        {props.ownMessage ? props.ownMessage : ""}
+        {props.from === "me" ? props.message.content : ""}
       </Col>
     </Row>
   );

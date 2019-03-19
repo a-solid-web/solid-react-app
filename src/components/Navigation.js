@@ -13,7 +13,6 @@ const Navigation = () => {
                     <NavLink to="/" style={{marginLeft: "20px"}}>Home</NavLink>
                     <NavLink to="/public/card" style={{marginLeft: "20px"}}>Publicprofile</NavLink>
                     <NavLink to="/register" style={{marginLeft: "20px"}}>Register</NavLink>
-                    <NavLink to="/messages" style={{marginLeft: "20px"}}>Messages</NavLink>
                     <NavLink to="/chat" style={{marginLeft: "20px"}}>Chat</NavLink>
                 </Nav>
             </Navbar>
