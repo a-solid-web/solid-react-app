@@ -260,9 +260,13 @@ export default class Chat extends React.Component {
         messages.push({"message": friendMessages[message], "from": "friend"});
     }
 
+    console.log(messages);
+
     messages.sort(function(a,b){
-        return new Date(a.created) - new Date(b.created);
+        return new Date(a.message.created) - new Date(b.message.created);
     })
+
+    console.log(messages);
 
     let friendsMarkup = this.state.friends.map((friend, index) => {
         return (<MessageThumbnails friend={friend} index={index} onClick={this.fetchMessages.bind(this)}/>);
