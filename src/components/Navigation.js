@@ -11,7 +11,7 @@ const Navigation = () => {
                 <Navbar.Brand>SOLID</Navbar.Brand>
                 <Nav className="mr-auto">
                     <NavLink to="/" style={{marginLeft: "20px"}}>Home</NavLink>
-                    <NavLink to="/public/card" style={{marginLeft: "20px"}}>Publicprofile</NavLink>
+                    <NavLink to="/private/card" style={{marginLeft: "20px"}}>PrivateProfile</NavLink>
                     <NavLink to="/register" style={{marginLeft: "20px"}}>Register</NavLink>
                     <NavLink to="/chat" style={{marginLeft: "20px"}}>Chat</NavLink>
                 </Nav>

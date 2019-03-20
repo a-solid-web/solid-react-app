@@ -1,5 +1,5 @@
 import React from "react";
-import PublicProfileField from "./PublicProfileField";
+import PrivateProfileField from "./PrivateProfileField";
 import Container from "react-bootstrap/Container";
 
 const auth = require("solid-auth-client");
@@ -8,14 +8,15 @@ const rdf = require("rdflib");
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
 
-class PublicProfile extends React.Component {
+class PrivateProfile extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             webId: this.props.webId,
-            publicBio: "",
-            publicName: "",
+            bio: "",
+            name: "",
+            role: "",
         }
     }
 
@@ -28,26 +29,30 @@ class PublicProfile extends React.Component {
 
                 const webId = session.webId;
                 this.setState({webId: webId});
+                console.log(webId)
 
-                const publicProfileCard = webId.replace("profile/card#me", "public/card");
+                const privateProfileCard = webId.replace("profile/card#me", "public/card");
 
                 const store = rdf.graph();
                 const fetcher = new rdf.Fetcher(store); 
-                fetcher.load(publicProfileCard).then((response) => {
-                    const publicName = store.any(rdf.sym(publicProfileCard + "#me"), FOAF("name"));
-                    const publicNameValue = publicName ? publicName.value : "";
-                    console.log(publicNameValue);
+                fetcher.load(privateProfileCard).then((response) => {
+                    const name = store.any(rdf.sym(privateProfileCard + "#me"), FOAF("name"));
+                    const nameValue = name ? name.value : "";
+                    console.log(nameValue);
                     
-                    const publicBio = store.any(rdf.sym(publicProfileCard + "#me"), VCARD("note"));
-                    const publicBioValue = publicBio ? publicBio.value : ""; 
-                    console.log(publicBioValue);
+                    const bio = store.any(rdf.sym(privateProfileCard + "#me"), VCARD("note"));
+                    const bioValue = bio ? bio.value : ""; 
+                    console.log(bioValue);
 
-                    
+                    const role = store.any(rdf.sym(privateProfileCard + "#me"), VCARD("role"));
+                    const roleValue = role? role.value : ""; 
+                    console.log(roleValue); 
 
 
                     this.setState({
-                        publicBio: publicBioValue, 
-                        publicName: publicNameValue,
+                        bio: bioValue, 
+                        name: nameValue,
+                        role: roleValue,
                     })
 
                     console.log(this.state); 
@@ -67,8 +72,8 @@ class PublicProfile extends React.Component {
                 <main>
                     <Container>
                         <div style={{marginBottom:"15px"}}>
-                            <h3 style={{marginTop: "20px", marginBottom: "15px"}}>Public Profile Info</h3>
-                            <PublicProfileField webId={this.state.webId} publicBio={this.state.publicBio} publicName={this.state.publicName}/>
+                            <h3 style={{marginTop: "20px", marginBottom: "15px"}}>Private Profile Info</h3>
+                            <PrivateProfileField webId={this.state.webId} bio={this.state.bio} name={this.state.name} role={this.state.role}/>
                         </div>
                     </Container>
                 </main>
@@ -77,4 +82,4 @@ class PublicProfile extends React.Component {
     }
 }
 
-export default PublicProfile;
+export default PrivateProfile;
