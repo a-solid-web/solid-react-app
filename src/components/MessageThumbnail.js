@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 const MessageThumbnails = props => {
   const friend = props.friend;
   return (
-    <ListGroup.Item action href={friend.webId.split(".")[0].replace("https://", "#")} style={{width: "100%"}} key={props.index}>
+    <ListGroup.Item onClick={props.onClick} action href={friend.webId.split(".")[0].replace("https://", "#")} style={{width: "100%"}} key={props.index}>
         <Row>
             <Col lg={{ span: 6 }}><p style={{fontSize: "0.75rem"}}>{friend.name}</p></Col>
             <Col lg={{ span: 6 }}>

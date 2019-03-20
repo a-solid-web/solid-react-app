@@ -1,7 +1,7 @@
 import React from "react";
 import ProfileField from "./ProfileField";
 
-const auth = require("solid-auth-client");
+ 
 const rdf = require("rdflib");
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");

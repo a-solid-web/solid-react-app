@@ -31,7 +31,8 @@ export default class Chat extends React.Component {
       friends: [],
       ownMessages: [],
       friendMessages: [],
-      newMessage: ""
+      newMessage: "",
+      friendsWebId: ""
     };
   }
 
@@ -112,7 +113,7 @@ export default class Chat extends React.Component {
     const username = this.state.webId.split(".")[0].replace("https://", "");
     const userInboxAddress = this.state.webId.replace("profile/card#me", "inbox/");
 
-    const friendsName = window.location.href.split("#")[1];
+    const friendsName = window.location.href.split("#")[1]
     const friendsWebId = this.state.webId.replace(username, friendsName);
     const friendsInboxAddress = friendsWebId.replace("profile/card#me", "inbox/" + username)
 
@@ -130,6 +131,11 @@ export default class Chat extends React.Component {
         this.setState({
             ownMessages: ownMessages
         })
+    }).catch((err) => {
+        this.setState({
+            ownMessages: []
+        })
+        console.log("You haven't send any messages yet!")
     })
 
     fetcher.load(friendsInboxAddress).then((response) => {
@@ -146,6 +152,9 @@ export default class Chat extends React.Component {
             friendMessages: friendMessages
         });
     }).catch((err) => {
+        this.setState({
+            friendMessages: []
+        })
         console.log("This friend has no chat with you yet.");
     })
   }
@@ -259,8 +268,6 @@ export default class Chat extends React.Component {
     for (message in friendMessages){
         messages.push({"message": friendMessages[message], "from": "friend"});
     }
-
-    console.log(messages);
 
     messages.sort(function(a,b){
         return new Date(a.message.created) - new Date(b.message.created);

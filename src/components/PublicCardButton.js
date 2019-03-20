@@ -15,7 +15,9 @@ export default class PublicCardButton extends React.Component {
         super(props);
         this.state = {
             friends: [],
-            webId: this.props.webId
+            webId: this.props.webId,
+            statementToMakePublic: [],
+            statementToDelete: [],
         };
     }
 
@@ -70,24 +72,23 @@ export default class PublicCardButton extends React.Component {
         var statementToDelete; 
 
         fetcher.load(publicCard).then(() => {
+            console.log(statementToAdd)
             if(bioToAdd) {
                 statementToDelete = store.statementsMatching(rdf.sym(publicCard + "#me"), VCARD("note"), null, rdf.sym(publicCard).doc());
             }
 
-            let del = [statementToDelete[0]];
-            console.log(statementToDelete[0])
+            let del = statementToDelete ? [statementToDelete[0]] : [];
 
             var ins;
-            if (Array.isArray(statementToAdd)){
+            Array.isArray(statementToAdd) ? 
                 ins = [
                     statementToAdd[0],
                     statementToAdd[1]
                 ]
-            } else {
+            :
                 ins = [
                     statementToAdd
-                ]
-            }
+                ];
             console.log(ins)
 
             updater.update(del, ins, (uri, ok, message) => {

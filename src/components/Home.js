@@ -168,29 +168,10 @@ class Home extends React.Component {
                     <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
                       Show My Friends
                     </Button>
-                    <Button
-                      onClick={this.toggleModal.bind(this)} id="messageButton"
-                      style={{ marginLeft: 5 }}
-                    >
-                      Show My Messages
-                    </Button>
-                    <VerticallyCenteredModal
-                      show={this.state.inboxModal}
-                      onHide={this.toggleModal.bind(this)}
-                      id="messageButton"
-                      webid={(this.state.webId !== "") ? this.state.webId : ""}
-                    />
                     <FriendsModal
                       show={this.state.friendsModal}
                       onHide={this.toggleModal.bind(this)}
                       id="friendsButton"
-                      webid={this.state.webId}
-                    />
-                    <FriendsModal
-                      friends={this.state.friends}
-                      show={this.state.privacyModal}
-                      onHide={this.toggleModal.bind(this)}
-                      id="privacyButton"
                       webid={this.state.webId}
                     />
                   </LoggedIn>
