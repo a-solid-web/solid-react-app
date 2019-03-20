@@ -27,7 +27,7 @@ class Home extends React.Component {
       inboxModal: false,
       pictureModal: false,
       privacyModal: false,
-      webId: "",
+      webId: this.props.webId,
       picture: ""
     };
   }
@@ -133,20 +133,11 @@ class Home extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
-  fetchUser() {
-    auth.trackSession(session => {
-      if (!session) {
-        console.log("You are not logged in");
-      } else {
-        this.setState({ webId: session.webId });
-        console.log(this.state.webId);
-        this.fetchPicture();
-      }
-    });
-  }
-
-  componentWillMount() {
-    this.fetchUser();
+  componentDidMount() {
+    console.log("Here we are");
+    console.log(this.props.webId);
+    this.setState({ webId: this.props.webId });
+    // this.fetchPicture();
   }
 
   render() {
