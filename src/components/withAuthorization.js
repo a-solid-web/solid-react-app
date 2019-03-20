@@ -4,11 +4,11 @@ import { compose } from "recompose";
 
 const auth = require("solid-auth-client");
 
-const withAuthorization = condition => Component => {
+const withAuthorization = () => Component => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
       auth.trackSession(session => {
-        if (!condition(session)) {
+        if (!session) {
           console.log("You are not logged in");
           this.props.history.push("/login");
         }

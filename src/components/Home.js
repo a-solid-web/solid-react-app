@@ -208,5 +208,4 @@ class Home extends React.Component {
   }
 }
 
-const condition = authUser => !!authUser;
-export default withAuthorization(condition)(Home);
+export default withAuthorization()(Home);
