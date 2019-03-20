@@ -6,6 +6,7 @@ import PublicProfile from "./components/PublicProfile";
 import Register from "./components/Register";
 import Navigation from "./components/Navigation";
 import Chat from "./components/Chat";
+import LoginView from "./components/LoginView";
 
 const App = props => {
   return (
@@ -18,6 +19,7 @@ const App = props => {
           {/* <Route component={ErrorPage}/> */}
           <Route path="/register" component={Register} />
           <Route path="/chat" component={Chat} />
+          <Route path="/login" component={LoginView} />
         </Switch>
       </div>
     </BrowserRouter>

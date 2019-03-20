@@ -10,8 +10,8 @@ import { AddPicture } from "./AddPicture";
 import { ChangeProfilePicture } from "./ChangeProfilePicture";
 import FriendsModal from "./FriendsModal";
 import Profile from "./Profile";
+import withAuthorization from "./withAuthorization";
 // import PublicProfile from "./components/PublicProfile";
-
 
 const $rdf = require("rdflib");
 const auth = require("solid-auth-client");
@@ -34,13 +34,22 @@ class Home extends React.Component {
 
   toggleModal(e) {
     var modalAction = e.target.id;
-    console.log(modalAction)
+    console.log(modalAction);
     switch (modalAction) {
-      case "friendsButton": this.setState({friendsModal: !this.state.friendsModal}); break;
-      case "messageButton": this.setState({inboxModal: !this.state.inboxModal}); break;
-      case "pictureButton": this.setState({pictureModal: !this.state.pictureModal}); break;
-      case "privacyButton": this.setState({privacyModal: !this.state.privacyModal}); break;
-      default: break;
+      case "friendsButton":
+        this.setState({ friendsModal: !this.state.friendsModal });
+        break;
+      case "messageButton":
+        this.setState({ inboxModal: !this.state.inboxModal });
+        break;
+      case "pictureButton":
+        this.setState({ pictureModal: !this.state.pictureModal });
+        break;
+      case "privacyButton":
+        this.setState({ privacyModal: !this.state.privacyModal });
+        break;
+      default:
+        break;
     }
   }
 
@@ -142,58 +151,62 @@ class Home extends React.Component {
 
   render() {
     return (
-        <div>
-          <main>
-            <Container>
-              <Row style={{marginTop: "100px"}}>
-                <Col md="1" />
-                <Col md="10">
-                  <LoggedIn>
-                    <Row>
-                      <Col md="8">
-                        <ProfilePicture picture={this.state.picture} />
-                      </Col>
-                      <Col md="4">
-                        <Row>
-                          <AddPicture onChange={this.setPicture.bind(this)} />
-                        </Row>
-                        <Row>
-                          <ChangeProfilePicture
-                            onChange={this.setProfilePicture.bind(this)}
-                          />
-                        </Row>
-                      </Col>
-                    </Row>
-                    <Profile/>
-                    <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
-                      Show My Friends
-                    </Button>
-                    <FriendsModal
-                      show={this.state.friendsModal}
-                      onHide={this.toggleModal.bind(this)}
-                      id="friendsButton"
-                      webid={this.state.webId}
-                    />
-                  </LoggedIn>
-                  <LoggedOut>
-                    <p>You are logged out.</p>
-                  </LoggedOut>
-                  <AuthButton
-                    popup="popup.html"
-                    login="Login here!"
-                    logout="Logout here!"
+      <div>
+        <main>
+          <Container>
+            <Row style={{ marginTop: "100px" }}>
+              <Col md="1" />
+              <Col md="10">
+                <LoggedIn>
+                  <Row>
+                    <Col md="8">
+                      <ProfilePicture picture={this.state.picture} />
+                    </Col>
+                    <Col md="4">
+                      <Row>
+                        <AddPicture onChange={this.setPicture.bind(this)} />
+                      </Row>
+                      <Row>
+                        <ChangeProfilePicture
+                          onChange={this.setProfilePicture.bind(this)}
+                        />
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Profile />
+                  <Button
+                    onClick={this.toggleModal.bind(this)}
+                    id="friendsButton"
+                  >
+                    Show My Friends
+                  </Button>
+                  <FriendsModal
+                    show={this.state.friendsModal}
+                    onHide={this.toggleModal.bind(this)}
+                    id="friendsButton"
+                    webid={this.state.webId}
                   />
-                  {/*<Button onClick={this.toggleModal.bind(this)} id="friendsButton">
+                </LoggedIn>
+                <LoggedOut>
+                  <p>You are logged out.</p>
+                </LoggedOut>
+                <AuthButton
+                  popup="popup.html"
+                  login="Login here!"
+                  logout="Logout here!"
+                />
+                {/*<Button onClick={this.toggleModal.bind(this)} id="friendsButton">
                     Show My Permissions
                   </Button>*/}
-                </Col>
-                <Col md="1" />
-              </Row>
-            </Container>
-          </main>
-        </div>  
+              </Col>
+              <Col md="1" />
+            </Row>
+          </Container>
+        </main>
+      </div>
     );
   }
 }
 
-export default Home;
+const condition = authUser => !!authUser;
+export default withAuthorization(condition)(Home);
