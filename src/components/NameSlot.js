@@ -36,6 +36,8 @@ class NameSlot extends React.Component {
   
         var del;
         var ins;
+
+        console.log(this.state.currentValue); 
   
         del = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.currentValue), rdf.sym(this.state.webId).doc());
         ins = rdf.st(rdf.sym(this.state.webId), FOAF("name"), rdf.lit(this.state.newValue), rdf.sym(this.state.webId).doc());

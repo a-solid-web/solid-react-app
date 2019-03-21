@@ -17,6 +17,7 @@ class PrivateProfile extends React.Component {
             bio: "",
             name: "",
             role: "",
+            emails: [],
         }
     }
 
@@ -35,6 +36,7 @@ class PrivateProfile extends React.Component {
 
                 const store = rdf.graph();
                 const fetcher = new rdf.Fetcher(store); 
+                
                 fetcher.load(privateProfileCard).then((response) => {
                     const name = store.any(rdf.sym(privateProfileCard + "#me"), FOAF("name"));
                     const nameValue = name ? name.value : "";
@@ -48,11 +50,20 @@ class PrivateProfile extends React.Component {
                     const roleValue = role? role.value : ""; 
                     console.log(roleValue); 
 
+                    var emails = [];
+                    store.each(rdf.sym(privateProfileCard + "#me"), VCARD("hasEmail")).forEach((emailBlankId) => {
+                        store.each(rdf.sym(emailBlankId), VCARD("value")).forEach((emailAddress) => {
+                            emails.push([emailAddress.value, emailBlankId.value]); 
+                        })
+                    });
+
+                    
 
                     this.setState({
                         bio: bioValue, 
                         name: nameValue,
                         role: roleValue,
+                        emails: emails
                     })
 
                     console.log(this.state); 
@@ -73,7 +84,7 @@ class PrivateProfile extends React.Component {
                     <Container>
                         <div style={{marginBottom:"15px"}}>
                             <h3 style={{marginTop: "20px", marginBottom: "15px"}}>Private Profile Info</h3>
-                            <PrivateProfileField webId={this.state.webId} bio={this.state.bio} name={this.state.name} role={this.state.role}/>
+                            <PrivateProfileField webId={this.state.webId} bio={this.state.bio} name={this.state.name} role={this.state.role} emails={this.state.emails}/>
                         </div>
                     </Container>
                 </main>

@@ -34,7 +34,7 @@ export default class PublicCardButton extends React.Component {
         const fetcher = new rdf.Fetcher(store);
 
         var statementToAdd;
-
+                            
         const emailToAdd = this.props.email ? this.props.email : undefined;
         if(emailToAdd){
             const blankNode = "id" + String(Math.floor(Math.random() * 1000000))

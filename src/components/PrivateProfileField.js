@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import PrivateBioSlot from "./PrivateBioSlot"; 
 import PrivateNameSlot from "./PrivateNameSlot";
 import PrivateRoleSlot from "./PrivateRoleSlot"; 
+import PrivateEmailSlot from "./PrivateEmailSlot";
 
 
 const PrivateProfileField = (props) => {
@@ -12,6 +13,10 @@ const PrivateProfileField = (props) => {
     const nameMarkup = props.name !== "" ? <PrivateNameSlot webId={props.webId} name={props.name}/> : "";
 
     const roleMarkup = props.role !== "" ? <PrivateRoleSlot webId = {props.webId}  role={props.role}/> : "";
+
+    const emailMarkup = props.emails.map((email, index) => {
+        return (<PrivateEmailSlot webId={props.webId} key={index} email={email}/>)
+    });
 
 
 
@@ -22,6 +27,9 @@ const PrivateProfileField = (props) => {
                     {bioMarkup}
                     {nameMarkup}
                     {roleMarkup}
+                </Row>
+                <Row style={{width: "100%"}}>
+                    {emailMarkup}
                 </Row>
             </Col>
         </Row>
