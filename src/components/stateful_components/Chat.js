@@ -3,10 +3,10 @@ import Tab from "react-bootstrap/Tab";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import MessageThumbnails from "./MessageThumbnail";
-import MessageInput from "./MessageInput";
+import MessageThumbnails from "../functional_components/MessageThumbnail";
+import MessageInput from "../functional_components/MessageInput";
 import ListGroup from "react-bootstrap/ListGroup";
-import Message from "./Message";
+import Message from "../functional_components/Message";
 
 const rdf = require("rdflib");
 const auth = require("solid-auth-client");

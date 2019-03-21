@@ -3,7 +3,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
-import { PrivacyButton } from "./PrivacyButton";
+import { PrivacyButton } from "../functional_components/PrivacyButton";
 
 export const FriendSlot = props => {
   return (
