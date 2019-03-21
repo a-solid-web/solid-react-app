@@ -1,5 +1,4 @@
 import React from "react";
-
 import { BrowserRouter, Route, Switch } from "react-router-dom"; 
 import Home from "./components/Home";
 import PublicProfile from "./components/PublicProfile"; 
