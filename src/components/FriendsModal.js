@@ -110,7 +110,7 @@ export default class FriendsModal extends React.Component {
 
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
-
+    
     //const documentAddress = viewerNode.split("#")[0].replace(".acl", "#me");
 
     let del = [
@@ -132,7 +132,7 @@ export default class FriendsModal extends React.Component {
     const settingsAddress = viewerNode.replace("#viewer", "");
     console.log(settingsAddress)
     const documentAddress = settingsAddress.split("#")[0].replace(".acl", "");
-
+    
     const store = $rdf.graph();
     const updater = new $rdf.UpdateManager(store);
     const fetcher = new $rdf.Fetcher(store)

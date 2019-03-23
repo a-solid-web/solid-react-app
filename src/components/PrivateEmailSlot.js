@@ -3,6 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import PublicCardButton from "./PublicCardButton";
 import FormControl from "react-bootstrap/FormControl";
+import DataPrivacyButton from "./DataPrivacyButton"; 
 
 
 const rdf = require("rdflib");
@@ -27,6 +28,7 @@ class PrivateEmailSlot extends React.Component {
             console.log("You are not logged in");
           } else {
             this.setState({ webId: session.webId });
+            console.log("webId is set");
           }
         });
     }
@@ -49,13 +51,13 @@ class PrivateEmailSlot extends React.Component {
 
         del = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym(this.state.currentValue[0]), rdf.sym(privateCard).doc());
         ins = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(privateCard).doc());
+        console.log(this.state.currentValue);
 
         updater.update(del, ins, (uri, ok, message) => {
             if(ok) {
                 let newValue = ["mailto:" + this.state.newValue, this.state.currentValue[1]];
                 this.setState({editMode: false, currentValue: newValue}); 
             }
-
             else alert(message); 
         })
         
@@ -109,7 +111,8 @@ class PrivateEmailSlot extends React.Component {
                 </Col>
                 <Col md="4">
                     <Row style={{width: "100%"}}>
-                        <PublicCardButton webId={this.props.webId} email={this.props.email[0]}/>
+                        <DataPrivacyButton webId={this.props.webId} email={this.props.email[0]} currentId={this.state.currentValue[1].split("#")[1]}
+                        currentValue={this.state.currentValue}/>
                     </Row>
                 </Col>
             </Row>
