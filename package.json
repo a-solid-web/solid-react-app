@@ -12,7 +12,8 @@
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.5",
-    "solid-auth-client": "^2.2.14"
+    "solid-auth-client": "^2.2.14",
+    "yoda-design-system": "0.0.2-alpha"
   },
   "scripts": {
     "start": "react-scripts start",

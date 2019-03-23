@@ -1,9 +1,9 @@
 import React from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
 import { PrivacyButton } from "../functional_components/PrivacyButton";
+import { Button } from "yoda-design-system";
 
 export const FriendSlot = props => {
   return (
@@ -22,7 +22,7 @@ export const FriendSlot = props => {
       </Col>
       <Col md="3">
         <Button
-          style={{ backgroundColor: "red" , marginBottom: "50%", marginTop: "50%"}}
+          style={{ marginBottom: "50%", marginTop: "50%"}}
           onClick={props.onClick}
           id={props.friend.webId}
         >
@@ -30,11 +30,6 @@ export const FriendSlot = props => {
         </Button>
       </Col>
       <Col md="3">
-        <PrivacyButton
-          webid={props.friend.webId}
-          permission={props.friend.access}
-          onClick={props.changeAccess}
-        />
       </Col>
     </Row>
   );

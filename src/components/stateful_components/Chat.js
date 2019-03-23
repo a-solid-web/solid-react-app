@@ -11,9 +11,7 @@ import Message from "../functional_components/Message";
 const rdf = require("rdflib");
 const auth = require("solid-auth-client");
 
-const LDP = new rdf.Namespace("http://www.w3.org/ns/ldp#");
 const RDF = new rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-const ACT = new rdf.Namespace("https://www.w3.org/ns/activitystreams#");
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
 const ACL = new rdf.Namespace("http://www.w3.org/ns/auth/acl#");

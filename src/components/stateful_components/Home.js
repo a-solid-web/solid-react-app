@@ -1,14 +1,12 @@
 import React from "react";
 import { AuthButton, LoggedIn, LoggedOut } from "@solid/react";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import VerticallyCenteredModal from "../functional_components/VerticallyCenteredModal";
 import ProfilePicture from "../functional_components/ProfilePicture";
 import { AddPicture } from "../functional_components/AddPicture";
 import { ChangeProfilePicture } from "../functional_components/ChangeProfilePicture";
-import FriendsModal from "./FriendsModal";
+import FriendsList from "./FriendsList";
 import Profile from "./Profile";
 // import PublicProfile from "./components/PublicProfile";
 
@@ -53,27 +51,6 @@ class Home extends React.Component {
       if (picture) this.setState({ picture: picture.value });
     });
   };
-
-  setPicture(e) {
-    var filePath = e.target.files[0];
-    var store = $rdf.graph();
-    var fetcher = new $rdf.Fetcher(store);
-
-    let webId = this.state.webId;
-
-    var reader = new FileReader();
-    reader.onload = function() {
-      var data = this.result;
-      var filename = encodeURIComponent(filePath.name);
-      var contentType = "image";
-      let pictureURl = webId.replace("card#me", filename);
-      fetcher.webOperation("PUT", pictureURl, {
-        data: data,
-        contentType: contentType
-      });
-    };
-    reader.readAsArrayBuffer(filePath);
-  }
 
   setProfilePicture = e => {
     var filePath = e.target.files[0];
@@ -145,7 +122,7 @@ class Home extends React.Component {
         <div>
           <main>
             <Container>
-              <Row style={{marginTop: "100px"}}>
+              <Row>
                 <Col md="1" />
                 <Col md="10">
                   <LoggedIn>
@@ -155,9 +132,6 @@ class Home extends React.Component {
                       </Col>
                       <Col md="4">
                         <Row>
-                          <AddPicture onChange={this.setPicture.bind(this)} />
-                        </Row>
-                        <Row>
                           <ChangeProfilePicture
                             onChange={this.setProfilePicture.bind(this)}
                           />
@@ -165,15 +139,7 @@ class Home extends React.Component {
                       </Col>
                     </Row>
                     <Profile/>
-                    <Button onClick={this.toggleModal.bind(this)} id="friendsButton">
-                      Show My Friends
-                    </Button>
-                    <FriendsModal
-                      show={this.state.friendsModal}
-                      onHide={this.toggleModal.bind(this)}
-                      id="friendsButton"
-                      webid={this.state.webId}
-                    />
+                    <FriendsList/>
                   </LoggedIn>
                   <LoggedOut>
                     <p>You are logged out.</p>

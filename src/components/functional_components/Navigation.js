@@ -6,7 +6,7 @@ import Nav from "react-bootstrap/Nav";
 
 const Navigation = () => {
     return(
-        <div style={{padding: "5%"}}>
+        <div style={{padding: "2%"}}>
             <Navbar bg="dark" variant="dark" fixed="top">
                 <Navbar.Brand>SOLID</Navbar.Brand>
                 <Nav className="mr-auto">
