@@ -132,12 +132,12 @@ class Home extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
-  // componentDidMount() {
-  //   console.log("Here we are");
-  //   console.log(this.props.webId);
-  //   this.setState({ webId: this.props.webId });
-  //   // this.fetchPicture();
-  // }
+  componentDidMount() {
+    console.log("Here we are");
+    console.log(this.props.webId);
+    this.setState({ webId: this.props.webId });
+    // this.fetchPicture();
+  }
 
   render() {
     return (

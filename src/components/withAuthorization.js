@@ -7,19 +7,25 @@ let webId;
 
 const withAuthorization = () => Component => {
   class WithAuthorization extends React.Component {
-    componentWillMount() {
+    state = {
+      webId: null
+    };
+    componentDidMount() {
+      console.log("Hello");
       auth.trackSession(session => {
         if (!session) {
           console.log("You are not logged in");
           this.props.history.push("/login");
         } else {
-          webId = session.webId;
+          this.setState({ webId: session.webId });
+          console.log(this.state.webId);
         }
       });
     }
 
     render() {
-      return <Component webId={webId} />;
+      console.log("foo");
+      return <Component webId={this.state.webId} />;
     }
   }
   return compose(withRouter)(WithAuthorization);
