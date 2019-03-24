@@ -56,9 +56,11 @@ class DataPrivacyButton extends React.Component {
                 this.setState({dataStatus: false});  
             }
             console.log(this.state.dataStatus);
+            console.log(this.props.currentValue[0]);
         })
 
     }
+    
     makePrivate() {
         var webId = this.state.webId;
         
@@ -81,8 +83,6 @@ class DataPrivacyButton extends React.Component {
             
             statementToDelete = rdf.st(rdf.sym(emailBlankNode), VCARD("value"), rdf.sym(this.props.currentValue[0]), rdf.sym(this.state.webId).doc()); 
             statementToAdd = rdf.st(rdf.sym(emailBlankNode), VCARD("value"), rdf.lit("request Access"), rdf.sym(this.state.webId).doc());
-
-
         }
 
         fetcher.load(webId).then(() => {
@@ -92,12 +92,15 @@ class DataPrivacyButton extends React.Component {
 
             updater.update(del, ins, (uri, ok, message) => {
                 if(ok) {
+                    this.setState({ dataStatus: true});
                     console.log("data has been made private");
                 } else {
                     console.log(message); 
                 }
             });
         })
+
+
     }
 
     makePublic() {
@@ -133,14 +136,12 @@ class DataPrivacyButton extends React.Component {
             updater.update(del, ins, (uri, ok, message) => {
                 if(ok) {
                     console.log("Made Email Public");
+                    this.setState({ dataStatus: false});
                 } else {
                     console.log(message); 
                 }
             })
         })
-
-
-
     }
 
     componentWillMount() {
@@ -150,7 +151,10 @@ class DataPrivacyButton extends React.Component {
 
     render() {
         return(
-        <Button onClick={ this.state.dataStatus ? this.makePublic.bind(this) : this.makePrivate.bind(this)}>{this.state.dataStatus ? "Make Public" : "Make Private"}</Button>
+        <Button onClick={ this.state.dataStatus ? this.makePublic.bind(this) : this.makePrivate.bind(this)}
+        // onChange={this.fetchDataFromPublic.bind(this)}
+        >
+            {this.state.dataStatus ? "Make Public" : "Make Private"}</Button>
         )
     }
 }

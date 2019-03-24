@@ -43,7 +43,8 @@ class PrivateEmailSlot extends React.Component {
         var publicCard;
         var currentId;
         var emailBLankNode;
-        
+        var delTwo;
+
         const webId = this.state.webId;
         const privateCard = webId.replace("profile/card#me", "public/card#me");
         console.log(privateCard);
@@ -51,6 +52,7 @@ class PrivateEmailSlot extends React.Component {
 
         del = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym(this.state.currentValue[0]), rdf.sym(privateCard).doc());
         ins = rdf.st(rdf.sym(this.state.currentValue[1]), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(privateCard).doc());
+
         console.log(this.state.currentValue);
 
         updater.update(del, ins, (uri, ok, message) => {
@@ -68,15 +70,31 @@ class PrivateEmailSlot extends React.Component {
 
             emailBLankNode = publicCard + "#" + currentId;
 
-            del = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.sym(this.state.currentValue[0]), rdf.sym(webId).doc());
-            ins = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(webId).doc()); 
-            updater.update(del, ins, (uri, ok, message) => {
+            var mailValue; 
+            mailValue = store.any(rdf.sym(emailBLankNode), VCARD("value")); 
+            console.log(mailValue.value); 
+
+            
+            var delPublic;
+            var insPublic;
+
+            if(mailValue.value === "request Access") {
+                console.log("..taking first statements")
+                delPublic = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.lit("request Access"), rdf.sym(webId).doc());
+                insPublic = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(webId).doc());
+                
+            } else {
+                console.log("taking 2nd statements");
+                delPublic = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.sym(this.state.currentValue[0]), rdf.sym(webId).doc());
+                insPublic = rdf.st(rdf.sym(emailBLankNode), VCARD("value"), rdf.sym("mailto:" + this.state.newValue), rdf.sym(webId).doc());
+            }
+
+            updater.update(delPublic, insPublic, (uri, ok, message) => {
                 if(ok) {
                     console.log("updated Public profile")
                 } else alert(message); 
-            })
+            })   
         })
-
     }
 
 
