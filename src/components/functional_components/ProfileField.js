@@ -1,11 +1,11 @@
 import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import EmailSlot from "./EmailSlot";
-import NameSlot from "./NameSlot";
-import JobSlot from "./JobSlot";
-import BioSlot from "./BioSlot";
-import TelephoneSlot from "./TelephoneSlot";
+import EmailSlot from "../stateful_components/EmailSlot";
+import NameSlot from "../stateful_components/NameSlot";
+import JobSlot from "../stateful_components/JobSlot";
+import BioSlot from "../stateful_components/BioSlot";
+import TelephoneSlot from "../stateful_components/TelephoneSlot";
 
 const ProfileField = (props) => {
     const nameMarkup = props.name !== "" ? <NameSlot webId={props.webId} name={props.name}/> : ""; 

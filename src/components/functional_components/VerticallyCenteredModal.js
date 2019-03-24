@@ -8,8 +8,8 @@ import ModalFooter from "react-bootstrap/ModalFooter";
 import CardGroup from "react-bootstrap/CardGroup";
 import Row from "react-bootstrap/Row";
 import { FriendCard } from "./FriendCard";
-import AddFriend from "./AddFriend";
-import Inbox from "./Inbox";
+import AddFriend from "../stateful_components/AddFriend";
+import Inbox from "../stateful_components/Inbox";
 
 export default class VerticallyCenteredModal extends React.Component {
   render() {
