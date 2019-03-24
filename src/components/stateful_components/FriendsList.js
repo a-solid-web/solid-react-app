@@ -35,12 +35,12 @@ export default class Chat extends React.Component {
     const permissionStore = rdf.graph();
     const permissionFetcher = new rdf.Fetcher(permissionStore);
 
-    let viewerNode = this.state.webId.replace("card#me", "card.acl#viewer")
+    let viewerNode = this.state.webId.replace("card#me", "card.acl#viewer");
     permissionFetcher.load(viewerNode);
 
     //loading friends into state
     var friends = [];
-    this.setState({friends: friends})
+    this.setState({ friends: friends });
 
     fetcher.load(this.state.webId).then(response => {
       friends = store.each(rdf.sym(this.state.webId), FOAF("knows"));
@@ -52,11 +52,18 @@ export default class Chat extends React.Component {
 
         await fetcher.load(friend.value).then(response => {
           friendName = store.any(rdf.sym(friend.value), FOAF("name"));
-          
+
           friendPicture = store.any(rdf.sym(friend.value), VCARD("hasPhoto"));
           friendPicture = friendPicture ? friendPicture.value : "";
 
-          friendAccess = permissionStore.statementsMatching(viewerNode, ACL("agent"), rdf.sym(friend.value)).length > 0 ? true : false;
+          friendAccess =
+            permissionStore.statementsMatching(
+              viewerNode,
+              ACL("agent"),
+              rdf.sym(friend.value)
+            ).length > 0
+              ? true
+              : false;
           //console.log(friend.value, friendAccess)
         });
 
@@ -86,35 +93,32 @@ export default class Chat extends React.Component {
     });
   }
 
-  componentDidMount(){
-      this.fetchUser();
+  componentDidMount() {
+    this.fetchUser();
   }
 
   render() {
     let friendsMarkup = this.state.friends.map((friend, index) => {
-        return (<FriendThumbnail friend={friend} index={index}/>);
+      return <FriendThumbnail friend={friend} index={index} />;
     });
 
-    let friendProfileMarkup = this.state.friends.map((friend, index) => {
-        return (<FriendProfile friend={friend} index={index}/>)
-    })
+    // let friendProfileMarkup = this.state.friends.map((friend, index) => {
+    //     return (<FriendProfile friend={friend} index={index}/>)
+    // })
 
     return (
-        <Container>
-            <Tab.Container>
-                <Row>
-                    <Col lg={{span: 2}}>
-                        <ListGroup>
-                            {friendsMarkup}
-                        </ListGroup>
-                    </Col>
-                    <Col lg={{span: 10}}>
-                        <Tab.Content>
-                        </Tab.Content>
-                    </Col>
-                </Row>
-            </Tab.Container>
-        </Container>
+      <Container>
+        <Tab.Container>
+          <Row>
+            <Col lg={{ span: 2 }}>
+              <ListGroup>{friendsMarkup}</ListGroup>
+            </Col>
+            <Col lg={{ span: 10 }}>
+              <Tab.Content />
+            </Col>
+          </Row>
+        </Tab.Container>
+      </Container>
     );
   }
 }
