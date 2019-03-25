@@ -1,6 +1,7 @@
 import React from "react";
 import { AuthButton, LoggedIn, LoggedOut } from "@solid/react";
-import Button from "react-bootstrap/Button";
+//import Button from "react-bootstrap/Button";
+import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -26,7 +27,7 @@ class Home extends React.Component {
       inboxModal: false,
       pictureModal: false,
       privacyModal: false,
-      webId: this.props.webId,
+      webId: null,
       picture: ""
     };
   }
@@ -59,6 +60,7 @@ class Home extends React.Component {
     fetcher.load(this.state.webId).then(response => {
       picture = store.any($rdf.sym(this.state.webId), VCARD("hasPhoto"));
       if (picture) this.setState({ picture: picture.value });
+      return;
     });
   };
 
@@ -132,14 +134,19 @@ class Home extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
-  componentDidMount() {
-    console.log("Here we are");
-    console.log(this.props.webId);
-    this.setState({ webId: this.props.webId });
-    // this.fetchPicture();
+  static getDerivedStateFromProps(props, state) {
+    if (state.webId !== props.webId) return { webId: props.webId };
+    return 0;
+  }
+
+  componentDidUpdate() {
+    console.log("hi");
+    if (!this.state.picture) this.fetchPicture();
   }
 
   render() {
+    console.log("Home render");
+
     return (
       <div>
         <main>
