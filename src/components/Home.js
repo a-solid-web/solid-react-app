@@ -134,11 +134,12 @@ class Home extends React.Component {
     reader.readAsArrayBuffer(filePath);
   };
 
+  // Updates the state when new props get passed
   static getDerivedStateFromProps(props, state) {
     if (props.webId !== null) return { webId: props.webId };
     return null;
   }
-
+  // Calls fetchUser function when the prop gets passed
   componentDidUpdate() {
     console.log("hi");
     if (!this.state.picture && this.state.webId !== null) this.fetchPicture();

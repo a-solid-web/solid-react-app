@@ -75,11 +75,13 @@ class Profile extends React.Component {
     }
   }
 
+  // Updates the state when new props get passed
   static getDerivedStateFromProps(props, state) {
     if (props.webId !== null) return { webId: props.webId };
     return null;
   }
 
+  // Calls fetchUser function when the prop gets passed
   componentDidUpdate() {
     console.log("hiYo");
     if (!this.state.name && this.state.webId !== null) this.fetchUser();
