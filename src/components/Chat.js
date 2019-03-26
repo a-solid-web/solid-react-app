@@ -98,6 +98,7 @@ class Chat extends React.Component {
   };
 
   fetchUser() {
+    console.log("fetch User");
     if (!this.state.webId) {
       console.log("You are not logged in");
     } else {
@@ -106,16 +107,6 @@ class Chat extends React.Component {
       this.fetchFriends();
       this.fetchMessages();
     }
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.webId !== null) return { webId: props.webId };
-    return null;
-  }
-
-  componentDidUpdate() {
-    console.log("hi");
-    if (!this.state.friends && this.state.webId !== null) this.fetchUser();
   }
 
   fetchMessages() {
@@ -336,6 +327,18 @@ class Chat extends React.Component {
     //     rdf.st()
     //     rdf.st()
     // ]
+  }
+
+  // Updates the state when new props get passed
+  static getDerivedStateFromProps(props, state) {
+    if (props.webId !== null) return { webId: props.webId };
+    return null;
+  }
+  // Calls fetchUser function when the prop gets passed
+  componentDidUpdate() {
+    console.log("hi");
+    if (this.state.newMessage === "" && this.state.webId !== null)
+      this.fetchUser();
   }
 
   render() {
