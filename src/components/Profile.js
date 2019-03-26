@@ -22,69 +22,66 @@ class Profile extends React.Component {
   }
 
   fetchUser() {
-    auth.trackSession(session => {
-      if (!session) {
-        console.log("You are not logged in");
-      } else {
-        console.log("You are logged in... Fetching your data now");
+    if (!this.state.webId) {
+      console.log("Not working");
+    } else {
+      console.log("You are logged in... Fetching your data now");
 
-        const webId = session.webId;
-        this.setState({ webId: webId });
+      const webId = this.state.webId;
 
-        const store = rdf.graph();
-        const fetcher = new rdf.Fetcher(store);
-        fetcher.load(webId).then(response => {
-          const name = store.any(rdf.sym(webId), FOAF("name"));
-          const nameValue = name ? name.value : "";
+      const store = rdf.graph();
+      const fetcher = new rdf.Fetcher(store);
+      fetcher.load(webId).then(response => {
+        const name = store.any(rdf.sym(webId), FOAF("name"));
+        const nameValue = name ? name.value : "";
 
-          var emails = [];
+        var emails = [];
+        store.each(rdf.sym(webId), VCARD("hasEmail")).forEach(emailBlankId => {
           store
-            .each(rdf.sym(webId), VCARD("hasEmail"))
-            .forEach(emailBlankId => {
-              store
-                .each(rdf.sym(emailBlankId), VCARD("value"))
-                .forEach(emailAddress => {
-                  emails.push([emailAddress.value, emailBlankId.value]);
-                });
+            .each(rdf.sym(emailBlankId), VCARD("value"))
+            .forEach(emailAddress => {
+              emails.push([emailAddress.value, emailBlankId.value]);
             });
-
-          const job = store.any(rdf.sym(webId), VCARD("role"));
-          const jobValue = job ? job.value : "";
-
-          const bio = store.any(rdf.sym(webId), VCARD("note"));
-          const bioValue = bio ? bio.value : "";
-
-          var telephones = [];
-          store
-            .each(rdf.sym(webId), VCARD("hasTelephone"))
-            .forEach(telephoneBlankId => {
-              store
-                .each(rdf.sym(telephoneBlankId), VCARD("value"))
-                .forEach(telephoneNumber => {
-                  telephones.push([
-                    telephoneNumber.value,
-                    telephoneBlankId.value
-                  ]);
-                });
-            });
-
-          this.setState({
-            name: nameValue,
-            emails: emails,
-            job: jobValue,
-            bio: bioValue,
-            telephones: telephones
-          });
         });
-      }
-    });
+
+        const job = store.any(rdf.sym(webId), VCARD("role"));
+        const jobValue = job ? job.value : "";
+
+        const bio = store.any(rdf.sym(webId), VCARD("note"));
+        const bioValue = bio ? bio.value : "";
+
+        var telephones = [];
+        store
+          .each(rdf.sym(webId), VCARD("hasTelephone"))
+          .forEach(telephoneBlankId => {
+            store
+              .each(rdf.sym(telephoneBlankId), VCARD("value"))
+              .forEach(telephoneNumber => {
+                telephones.push([
+                  telephoneNumber.value,
+                  telephoneBlankId.value
+                ]);
+              });
+          });
+
+        this.setState({
+          name: nameValue,
+          emails: emails,
+          job: jobValue,
+          bio: bioValue,
+          telephones: telephones
+        });
+      });
+    }
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    //this.setState({ webId: this.props.webId });
     this.fetchUser();
   }
 
   render() {
+    console.log(this.state.webId);
     return (
       <ProfileField
         webId={this.state.webId}

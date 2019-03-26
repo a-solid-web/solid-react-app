@@ -135,13 +135,17 @@ class Home extends React.Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (state.webId !== props.webId) return { webId: props.webId };
+    if (props.webId !== null) return { webId: props.webId };
     return null;
   }
 
   componentDidUpdate() {
     console.log("hi");
-    if (!this.state.picture) this.fetchPicture();
+    if (!this.state.picture && this.state.webId !== null) this.fetchPicture();
+  }
+
+  componentDidMount() {
+    console.log("Is mounted");
   }
 
   render() {
@@ -171,7 +175,7 @@ class Home extends React.Component {
                     </Col>
                   </Row>
                   <Profile />
-                  <Button
+                  {/* <Button
                     onClick={this.toggleModal.bind(this)}
                     id="friendsButton"
                   >
@@ -182,7 +186,7 @@ class Home extends React.Component {
                     onHide={this.toggleModal.bind(this)}
                     id="friendsButton"
                     webid={this.state.webId}
-                  />
+                  /> */}
                 </LoggedIn>
                 <LoggedOut>
                   <p>You are logged out.</p>

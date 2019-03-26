@@ -21,49 +21,43 @@ class PublicProfile extends React.Component {
   }
 
   fetchUser() {
-    auth.trackSession(session => {
-      if (!session) {
-        console.log("You are not logged in");
-      } else {
-        console.log("You are logged in.. Fetching your public Data");
+    if (!this.state.webId) {
+      console.log("You are not logged in");
+    } else {
+      console.log("You are logged in.. Fetching your public Data");
 
-        const webId = session.webId;
-        this.setState({ webId: webId });
+      const webId = this.state.webId;
 
-        const publicProfileCard = webId.replace(
-          "profile/card#me",
-          "public/card"
+      const publicProfileCard = webId.replace("profile/card#me", "public/card");
+
+      const store = rdf.graph();
+      const fetcher = new rdf.Fetcher(store);
+      fetcher.load(publicProfileCard).then(response => {
+        const publicName = store.any(
+          rdf.sym(publicProfileCard + "#me"),
+          FOAF("name")
         );
+        const publicNameValue = publicName ? publicName.value : "";
+        console.log(publicNameValue);
 
-        const store = rdf.graph();
-        const fetcher = new rdf.Fetcher(store);
-        fetcher.load(publicProfileCard).then(response => {
-          const publicName = store.any(
-            rdf.sym(publicProfileCard + "#me"),
-            FOAF("name")
-          );
-          const publicNameValue = publicName ? publicName.value : "";
-          console.log(publicNameValue);
+        const publicBio = store.any(
+          rdf.sym(publicProfileCard + "#me"),
+          VCARD("note")
+        );
+        const publicBioValue = publicBio ? publicBio.value : "";
+        console.log(publicBioValue);
 
-          const publicBio = store.any(
-            rdf.sym(publicProfileCard + "#me"),
-            VCARD("note")
-          );
-          const publicBioValue = publicBio ? publicBio.value : "";
-          console.log(publicBioValue);
-
-          this.setState({
-            publicBio: publicBioValue,
-            publicName: publicNameValue
-          });
-
-          console.log(this.state);
+        this.setState({
+          publicBio: publicBioValue,
+          publicName: publicNameValue
         });
-      }
-    });
+
+        console.log(this.state);
+      });
+    }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchUser();
   }
 

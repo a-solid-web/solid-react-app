@@ -6,9 +6,14 @@ const auth = require("solid-auth-client");
 
 const withAuthorization = () => Component => {
   class WithAuthorization extends React.Component {
-    state = {
-      webId: null
-    };
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        webId: null
+      };
+    }
+
     componentDidMount() {
       auth.trackSession(session => {
         if (!session) {
