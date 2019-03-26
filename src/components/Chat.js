@@ -28,7 +28,7 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      webId: "",
+      webId: null,
       friends: [],
       ownMessages: [],
       friendMessages: [],
@@ -98,20 +98,24 @@ class Chat extends React.Component {
   };
 
   fetchUser() {
-    auth.trackSession(session => {
-      if (!session) {
-        console.log("You are not logged in");
-      } else {
-        console.log("You are logged in... Fetching your data now");
-        this.setState({ webId: session.webId });
-        this.fetchFriends();
-        this.fetchMessages();
-      }
-    });
+    if (!this.state.webId) {
+      console.log("You are not logged in");
+    } else {
+      console.log("You are logged in... Fetching your data now");
+
+      this.fetchFriends();
+      this.fetchMessages();
+    }
   }
 
-  componentDidMount() {
-    this.fetchUser();
+  static getDerivedStateFromProps(props, state) {
+    if (props.webId !== null) return { webId: props.webId };
+    return null;
+  }
+
+  componentDidUpdate() {
+    console.log("hi");
+    if (!this.state.friends && this.state.webId !== null) this.fetchUser();
   }
 
   fetchMessages() {

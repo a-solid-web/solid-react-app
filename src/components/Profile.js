@@ -12,7 +12,7 @@ class Profile extends React.Component {
     super(props);
 
     this.state = {
-      webId: this.props.webId,
+      webId: null,
       name: "",
       emails: [],
       job: "",
@@ -22,7 +22,7 @@ class Profile extends React.Component {
   }
 
   fetchUser() {
-    if (!this.state.webId) {
+    if (this.state.webId === undefined) {
       console.log("Not working");
     } else {
       console.log("You are logged in... Fetching your data now");
@@ -75,13 +75,18 @@ class Profile extends React.Component {
     }
   }
 
-  componentDidMount() {
-    //this.setState({ webId: this.props.webId });
-    this.fetchUser();
+  static getDerivedStateFromProps(props, state) {
+    if (props.webId !== null) return { webId: props.webId };
+    return null;
+  }
+
+  componentDidUpdate() {
+    console.log("hiYo");
+    if (!this.state.name && this.state.webId !== null) this.fetchUser();
   }
 
   render() {
-    console.log(this.state.webId);
+    console.log(this.props.webId);
     return (
       <ProfileField
         webId={this.state.webId}

@@ -174,7 +174,7 @@ class Home extends React.Component {
                       </Row>
                     </Col>
                   </Row>
-                  <Profile />
+                  <Profile webId={this.state.webId} />
                   {/* <Button
                     onClick={this.toggleModal.bind(this)}
                     id="friendsButton"
