@@ -5,7 +5,7 @@ import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import VerticallyCenteredModal from "./VerticallyCenteredModal";
+//import VerticallyCenteredModal from "./VerticallyCenteredModal";
 import ProfilePicture from "./ProfilePicture";
 import { AddPicture } from "./AddPicture";
 import { ChangeProfilePicture } from "./ChangeProfilePicture";
@@ -136,7 +136,7 @@ class Home extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (state.webId !== props.webId) return { webId: props.webId };
-    return 0;
+    return null;
   }
 
   componentDidUpdate() {

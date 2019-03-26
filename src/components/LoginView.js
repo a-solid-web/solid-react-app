@@ -2,10 +2,6 @@ import React from "react";
 import { AuthButton } from "@solid/react";
 
 class LoginView extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
