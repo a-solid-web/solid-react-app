@@ -14,7 +14,7 @@ class PublicProfile extends React.Component {
     super(props);
 
     this.state = {
-      webId: this.props.webId,
+      webId: null,
       publicBio: "",
       publicName: ""
     };
@@ -57,11 +57,19 @@ class PublicProfile extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.fetchUser();
+  // Updates the state when new props get passed
+  static getDerivedStateFromProps(props, state) {
+    if (props.webId !== null) return { webId: props.webId };
+    return null;
+  }
+  // Calls fetchUser function when the prop gets passed
+  componentDidUpdate() {
+    console.log("hi");
+    if (!this.state.publicBio && this.state.webId !== null) this.fetchUser();
   }
 
   render() {
+    console.log(this.state.webId);
     return (
       <div style={{ marginTop: "100px" }}>
         <main>
