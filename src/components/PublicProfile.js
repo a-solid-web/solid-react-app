@@ -63,8 +63,7 @@ class PublicProfile extends React.Component {
   }
   // Calls fetchUser function when the prop gets passed
   componentDidUpdate() {
-    console.log("hi");
-    if (!this.state.publicBio && this.state.webId !== null) this.fetchUser();
+    if (!this.state.publicName && this.state.webId !== null) this.fetchUser();
   }
 
   render() {
