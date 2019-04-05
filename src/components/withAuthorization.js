@@ -21,8 +21,6 @@ const withAuthorization = () => Component => {
           this.props.history.push("/login");
         } else {
           this.setState({ webId: session.webId });
-          console.log("state is changed");
-          //console.log(this.state.webId);
         }
       });
     }

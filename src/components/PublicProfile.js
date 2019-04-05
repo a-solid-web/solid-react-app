@@ -3,7 +3,6 @@ import PublicProfileField from "./PublicProfileField";
 import Container from "react-bootstrap/Container";
 import withAuthorization from "./withAuthorization";
 
-const auth = require("solid-auth-client");
 const rdf = require("rdflib");
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");

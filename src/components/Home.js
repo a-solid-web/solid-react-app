@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthButton, LoggedIn, LoggedOut } from "@solid/react";
 //import Button from "react-bootstrap/Button";
-import { Button } from "yoda-design-system";
+// import { Button } from "yoda-design-system";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,7 +9,7 @@ import Col from "react-bootstrap/Col";
 import ProfilePicture from "./ProfilePicture";
 import { AddPicture } from "./AddPicture";
 import { ChangeProfilePicture } from "./ChangeProfilePicture";
-import FriendsModal from "./FriendsModal";
+// import FriendsModal from "./FriendsModal";
 import Profile from "./Profile";
 import withAuthorization from "./withAuthorization";
 // import PublicProfile from "./components/PublicProfile";
@@ -141,17 +141,10 @@ class Home extends React.Component {
   }
   // Calls fetchUser function when the prop gets passed
   componentDidUpdate() {
-    console.log("hi");
     if (!this.state.picture && this.state.webId !== null) this.fetchPicture();
   }
 
-  componentDidMount() {
-    console.log("Is mounted");
-  }
-
   render() {
-    console.log("Home render");
-
     return (
       <div>
         <main>

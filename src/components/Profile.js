@@ -2,7 +2,6 @@ import React from "react";
 import ProfileField from "./ProfileField";
 
 const rdf = require("rdflib");
-const auth = require("solid-auth-client");
 
 const FOAF = new rdf.Namespace("http://xmlns.com/foaf/0.1/");
 const VCARD = new rdf.Namespace("http://www.w3.org/2006/vcard/ns#");
@@ -22,9 +21,7 @@ class Profile extends React.Component {
   }
 
   fetchUser() {
-    if (this.state.webId === undefined) {
-      console.log("Not working");
-    } else {
+    if (this.state.webId !== undefined) {
       console.log("You are logged in... Fetching your data now");
 
       const webId = this.state.webId;
@@ -83,12 +80,10 @@ class Profile extends React.Component {
 
   // Calls fetchUser function when the prop gets passed
   componentDidUpdate() {
-    console.log("hiYo");
     if (!this.state.name && this.state.webId !== null) this.fetchUser();
   }
 
   render() {
-    console.log(this.props.webId);
     return (
       <ProfileField
         webId={this.state.webId}
