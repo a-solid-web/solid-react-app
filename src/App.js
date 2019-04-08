@@ -1,10 +1,10 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Home from "./components/Home";
-import PublicProfile from "./components/PublicProfile";
-import Register from "./components/Register";
-import Navigation from "./components/Navigation";
-import Chat from "./components/Chat";
+import { BrowserRouter, Route, Switch } from "react-router-dom"; 
+import Home from "./components/stateful_components/Home";
+import PublicProfile from "./components/stateful_components/PublicProfile"; 
+import Register from "./components/stateful_components/Register";
+import Navigation from "./components/functional_components/Navigation";
+import Chat from "./components/stateful_components/Chat";
 import LoginView from "./components/LoginView";
 
 const App = props => {

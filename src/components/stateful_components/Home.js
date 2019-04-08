@@ -5,11 +5,19 @@ import { AuthButton, LoggedIn, LoggedOut } from "@solid/react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+<<<<<<< HEAD:src/components/Home.js
 //import VerticallyCenteredModal from "./VerticallyCenteredModal";
 import ProfilePicture from "./ProfilePicture";
 import { AddPicture } from "./AddPicture";
 import { ChangeProfilePicture } from "./ChangeProfilePicture";
 // import FriendsModal from "./FriendsModal";
+=======
+import VerticallyCenteredModal from "../functional_components/VerticallyCenteredModal";
+import ProfilePicture from "../functional_components/ProfilePicture";
+import { AddPicture } from "../functional_components/AddPicture";
+import { ChangeProfilePicture } from "../functional_components/ChangeProfilePicture";
+import FriendsModal from "./FriendsModal";
+>>>>>>> origin/development:src/components/stateful_components/Home.js
 import Profile from "./Profile";
 import withAuthorization from "./withAuthorization";
 // import PublicProfile from "./components/PublicProfile";
