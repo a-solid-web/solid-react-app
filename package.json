@@ -11,6 +11,8 @@
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.5",
+    "recompose": "^0.30.0",
     "react-scripts": "^2.1.8",
     "solid-auth-client": "^2.2.14",
     "yoda-design-system": "0.0.2-alpha"
@@ -36,6 +38,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.0",
-    "react-test-renderer": "^16.8.4"
+    "react-test-renderer": "^16.8.4",
+    "uglify-js-brunch": "^2.10.0"
   }
 }
