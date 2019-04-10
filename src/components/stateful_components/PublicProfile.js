@@ -1,7 +1,7 @@
 import React from "react";
 import PublicProfileField from "../functional_components/PublicProfileField";
 import Container from "react-bootstrap/Container";
-import withAuthorization from "./withAuthorization";
+import withAuthorization from "../withAuthorization";
 
 const rdf = require("rdflib");
 

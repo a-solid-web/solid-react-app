@@ -6,12 +6,8 @@ import Col from "react-bootstrap/Col";
 import MessageThumbnails from "../functional_components/MessageThumbnail";
 import MessageInput from "../functional_components/MessageInput";
 import ListGroup from "react-bootstrap/ListGroup";
-<<<<<<< HEAD:src/components/Chat.js
-import Message from "./Message";
-import withAuthorization from "./withAuthorization";
-=======
+import withAuthorization from "../withAuthorization";
 import Message from "../functional_components/Message";
->>>>>>> origin/development:src/components/stateful_components/Chat.js
 
 const rdf = require("rdflib");
 
